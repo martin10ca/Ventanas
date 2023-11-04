@@ -13,7 +13,7 @@ public class PlaceHolderTextField extends JTextField {
         isPlaceholderActive = true;
         setForeground(Color.GRAY);
         setText(placeholder);
-        setPreferredSize(new Dimension(15 * getFontMetrics(getFont()).charWidth('W'), 15));
+        //setPreferredSize(new Dimension(15 * getFontMetrics(getFont()).charWidth('W'), 15));
         addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
