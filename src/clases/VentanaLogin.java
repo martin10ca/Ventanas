@@ -71,6 +71,14 @@ public class VentanaLogin {
             }
         });
 
+        //Acción para el botón de registrarse
+        registerButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                VentanaRegistro ventanaR = new VentanaRegistro();
+                ventanaR.setVisible(true);
+            }
+        });
+
         // Panel para el texto y el botón "Registrarme"
      // Crear un panel contenedor con un BoxLayout horizontal
         JPanel centerPanel = new JPanel();
