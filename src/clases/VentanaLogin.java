@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class LoginWindow {
+public class VentanaLogin {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Inicio de Sesión");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
