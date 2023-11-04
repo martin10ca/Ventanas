@@ -10,10 +10,15 @@ public class VentanaAdmin {
     JFrame frame;
     JPanel panelSuperior;
     JTabbedPane panelInferior;
+    static boolean inAction;
     public VentanaAdmin() {
         this.frame = new JFrame("Menu Administrador");
         this.panelSuperior= setPanelSuperior();
         this.panelInferior= setPanelInferior();
+        inAction= false;
+
+        panelInferior.setEnabled(!inAction);
+
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(800, 600);
         frame.setLayout(new BorderLayout());
@@ -47,6 +52,7 @@ public class VentanaAdmin {
     }
 
     private static JTabbedPane setPanelInferior(){
+        inAction=true;
         JTabbedPane panel1= new JTabbedPane();
         panel1.add(menuVehiculos());
         JTabbedPane panel2= new JTabbedPane();
