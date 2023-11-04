@@ -1,5 +1,6 @@
 package clases;
 
+import java.awt.GridLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -17,7 +18,7 @@ public class VentanaRegistro extends JFrame {
 
     public VentanaRegistro() {
         super("Registro de Usuario");
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(new GridLayout(0, 1));
 
         nombreEmpresa = new JLabel("<Nombre Empresa>");
         textoBienvenida = new JLabel("¡Bienvenido a nuestro sistema!");
@@ -33,5 +34,6 @@ public class VentanaRegistro extends JFrame {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+        setSize(600, 400);
     }
 }
