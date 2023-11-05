@@ -1,12 +1,9 @@
-package clases.registro;
+package clases;
 
 import java.awt.GridLayout;
 
 import javax.swing.*;
 import javax.swing.event.DocumentListener;
-
-import clases.PlaceHolderTextField;
-
 import javax.swing.event.DocumentEvent;
 import java.util.Calendar;
 import java.awt.*;

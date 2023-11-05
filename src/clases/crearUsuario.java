@@ -1,12 +1,9 @@
-package clases.registro;
+package clases;
 
 import java.awt.GridLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-
-
-import clases.PlaceHolderTextField;
 
 public class crearUsuario extends JPanel {
     public crearUsuario() {
@@ -20,7 +17,7 @@ public class crearUsuario extends JPanel {
         add(labelMensaje);
         add(labelUsuario);
         add(campoUsuario);
-        
+
 
 
         add(labelContraseña);
