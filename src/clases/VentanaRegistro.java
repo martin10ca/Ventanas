@@ -2,8 +2,13 @@ package clases;
 
 import java.awt.GridLayout;
 
-import javax.swing.JComboBox;
 import javax.swing.*;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
+import java.util.Calendar;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class VentanaRegistro extends JFrame {
     private JLabel nombreEmpresa;
@@ -62,8 +67,15 @@ public class VentanaRegistro extends JFrame {
         String[] meses = {"01", "02", "03", "04", "05", "06", "07",
                          "08", "09", "10", "11", "12"};
         listaMes = new JComboBox<>(meses);
+        String mesSeleccionado = (String) listaMes.getSelectedItem();
+        if ("02".equals(mesSeleccionado)) {
+            limite = 29;
+        } else if ("04".equals(mesSeleccionado) || "06".equals(mesSeleccionado) 
+                || "09".equals(mesSeleccionado) || "11".equals(mesSeleccionado)) {
+            limite = 30;
+        } else {limite = 31;}
         listaDia = new JComboBox<>();
-        for (int i = 1; i <= 31; i++) {
+        for (int i = 1; i <= limite; i++) {
             listaDia.addItem(String.valueOf(i));
         }
 
@@ -81,9 +93,9 @@ public class VentanaRegistro extends JFrame {
         panelDatos.add(etiquetaTelefono);
         panelDatos.add(campoTelefono);
         panelDatos.add(etiquetaFecha);
-        panelFecha.add(listaDia);
-        panelFecha.add(listaMes);
         panelFecha.add(listaAnho);
+        panelFecha.add(listaMes);
+        if (listaMes.getSelectedItem() != null) {panelFecha.add(listaDia);}
         panelDatos.add(panelFecha);
         panelDatos.add(etiquetaNacionalidad);
         panelDatos.add(campoNacionalidad);
@@ -92,8 +104,39 @@ public class VentanaRegistro extends JFrame {
         panel.add(panelDatos);
         botonContinuar = new JButton("Continuar");
         botonContinuar.setEnabled(false);
-        
+        DocumentListener documentListener = new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                habilitarBotonContinuar();
+            }
 
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                habilitarBotonContinuar();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                habilitarBotonContinuar();
+            }
+
+            public void habilitarBotonContinuar(){
+
+            }
+        };
+        campoDocumento.getDocument().addDocumentListener(documentListener);
+        campoNombre.getDocument().addDocumentListener(documentListener);
+        campoCorreo.getDocument().addDocumentListener(documentListener);
+        campoTelefono.getDocument().addDocumentListener(documentListener);
+        campoNacionalidad.getDocument().addDocumentListener(documentListener);
+
+        botonContinuar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // Realizar acción al hacer clic en Continuar
+            }
+        });
+
+        panel.add(botonContinuar);
         add(panel);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
