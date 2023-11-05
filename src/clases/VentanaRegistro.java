@@ -172,3 +172,13 @@ public class VentanaRegistro extends JFrame {
     }
 
 }
+
+/*
+ *  public static String nuevoPanelFecha(int anio, int dia, int mes){
+ * //si pasan por parametro 0,0,0 -> se puede elegir cualquier fecha
+ * sino los parametros son el limite
+ * }
+ * 
+ * 
+ * 
+ */
