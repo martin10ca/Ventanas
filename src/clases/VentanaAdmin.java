@@ -13,6 +13,7 @@ import java.awt.event.ActionListener;
 import java.awt.font.TextAttribute;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class VentanaAdmin {
     static JFrame frame;
@@ -368,50 +369,9 @@ public class VentanaAdmin {
         avanzar2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                /*
-                panel2.removeAll();
-                panel2.revalidate();
-                panel2.repaint();
-                panel2.setLayout(new GridLayout(0,1));
-                // Cuadro que muestra el codigo de la sede
-                JLabel label = new JLabel("\tCódigo de Sede: "+"");
-                Border border = new LineBorder(Color.decode("#99A0A2"), 1); // Color del borde y grosor
-                label.setBorder(border);
-                label.setBackground(Color.decode("#CCEDF7"));
-                label.setOpaque(true);
-                label.setPreferredSize(new Dimension(170, 25));
-                panel2a.add(label);
-                panel2.add(panel2a);
-                panel2.add(panel2b);
-                frame.revalidate();
-                frame.repaint();
-                boolModificar= PanelesModificaciones.preguntaModificaciones(panel2b, "el nombre de la sede");
-                refrescar(panel2b);
-                refrescar(panel2);
-                if (boolModificar){
-                String nombre= PanelesModificaciones.modificacionString(panel2b,"Nombre","Ej: Sede Bosa");
-                boolModificar=false;
-                //TODO settear nombre
-                }
-                refrescar(panel2b);
-                refrescar(panel2);
-                boolModificar= PanelesModificaciones.preguntaModificaciones(panel2b, "la ubicación de la sede");
-                refrescar(panel2b);
-                refrescar(panel2);
-                if (boolModificar){
-                    String ubicacion= PanelesModificaciones.modificacionString(panel2b,"Ubicacion","Ej: Cl. 57c Sur #87-21 ");
-                    boolModificar=false;
-                    //TODO setear ubicacion
-                }
-                refrescar(panel2b);
-                refrescar(panel2);
-                */
-                // Limpia panel2 y realiza la configuración inicial
                 panel2.removeAll();
                 panel2.setLayout(new GridLayout(0, 1));
-
                 // Agrega un cuadro de código de sede
-                JPanel panel2a = new JPanel();
                 JLabel label = new JLabel("\tCódigo de Sede: ");
                 Border border = new LineBorder(Color.decode("#99A0A2"), 1);
                 label.setBorder(border);
@@ -419,11 +379,10 @@ public class VentanaAdmin {
                 label.setOpaque(true);
                 label.setPreferredSize(new Dimension(170, 25));
                 panel2a.add(label);
-
                 // Agrega panel2a a panel2
                 panel2.add(panel2a);
-
                 // Agrega panel2b a panel2
+                editarSede(panel2b);
                 frame.revalidate();
                 frame.repaint();
 
@@ -431,35 +390,29 @@ public class VentanaAdmin {
                 boolModificar = PanelesModificaciones.preguntaModificaciones(panel2b, "el nombre de la sede");
                 refrescar(panel2b);
                 refrescar(panel2);
-
                 if (boolModificar) {
                     // Realiza la modificación del nombre
-                    String nombre = PanelesModificaciones.modificacionString(panel2b, "Nombre", "Ej: Sede Bosa");
+                    String nombre="";
+                    //try {
+                    //    nombre = PanelesModificaciones.modificacionString(panel2b, "Nombre", "Ej: Sede Bosa");
+                    //} catch (InterruptedException e1) {e1.printStackTrace();} catch (ExecutionException e1) {e1.printStackTrace();}
                     boolModificar = false;
                     // TODO: Realiza la operación correspondiente con el nombre
+                    System.out.println(nombre);
                 }
-
                 // Limpia los paneles nuevamente
-                refrescar(panel2b);
-                refrescar(panel2);
-
                 // Pregunta por la modificación de la ubicación de la sede
                 boolModificar = PanelesModificaciones.preguntaModificaciones(panel2b, "la ubicación de la sede");
-                refrescar(panel2b);
-                refrescar(panel2);
-
                 if (boolModificar) {
                     // Realiza la modificación de la ubicación
-                    String ubicación = PanelesModificaciones.modificacionString(panel2b, "Ubicación", "Ej: Cl. 57c Sur #87-21");
+                    String ubicacion="";
+                    //try {
+                    //    ubicacion = PanelesModificaciones.modificacionString(panel2b, "Ubicación", "Ej: Cl. 57c Sur #87-21");
+                    //} catch (InterruptedException e1) {e1.printStackTrace();} catch (ExecutionException e1) {e1.printStackTrace();}
                     boolModificar = false;
                     // TODO: Realiza la operación correspondiente con la ubicación
+                    System.out.println(ubicacion);
                 }
-
-                // Limpia los paneles nuevamente
-                refrescar(panel2b);
-                refrescar(panel2);
-
-
                 }});
 
 
@@ -479,8 +432,6 @@ public class VentanaAdmin {
         menu.setSelectedIndex(-1);
         return menu;
     }
-
-
         private static JTabbedPane menuSeguros(){
         JTabbedPane menu = new JTabbedPane(JTabbedPane.LEFT);
         menu.add("Registrar Seguro",new JPanel());
@@ -508,8 +459,15 @@ public class VentanaAdmin {
         menu.setSelectedIndex(-1);
         return menu;
     }
-        public static void main(String[] args) {
-            VentanaAdmin ventana = new VentanaAdmin();
+    
+        private static void editarSede(JPanel mainPanel){
+        //1. Nombre
+        //2. Ubicacion y portada
+        //3. Horario de Atencion entre semana
+        //4. Horario de atencion fin de semana 
+
+
+
         }
         
         private static void refrescar(JPanel panel){
@@ -520,5 +478,8 @@ public class VentanaAdmin {
             frame.repaint();
         }
 
+        public static void main(String[] args) {
+            VentanaAdmin ventana = new VentanaAdmin();
+        }
         
 }
