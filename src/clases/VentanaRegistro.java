@@ -161,12 +161,13 @@ public class VentanaRegistro extends JFrame {
         setVisible(true);
     }
     private void actualizarDias(){
-            listaDia.removeAllItems();
-            for (int i = 1; i <= limite; i++) {
-                listaDia.addItem(String.valueOf(i));
-            }
+        listaDia.removeAllItems();
+        for (int i = 1; i <= limite; i++) {
+            listaDia.addItem(String.valueOf(i));
         }
-
-    
+    }
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> new VentanaRegistro());
+    }
 
 }
