@@ -7,6 +7,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.DocumentEvent;
 import java.util.Calendar;
 import java.awt.*;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -31,6 +32,7 @@ public class VentanaRegistro extends JFrame {
     private JLabel etiquetaNacionalidad;
     private PlaceHolderTextField campoNacionalidad;
     private JButton botonContinuar;
+    private JTabbedPane tab1;
 
 
     public VentanaRegistro() {
@@ -103,6 +105,7 @@ public class VentanaRegistro extends JFrame {
         panel.add(panelInfo);
         panel.add(panelDatos);
         botonContinuar = new JButton("Continuar");
+        botonContinuar.setPreferredSize(new Dimension(50,30));
         botonContinuar.setEnabled(false);
         DocumentListener documentListener = new DocumentListener() {
             @Override
@@ -121,7 +124,12 @@ public class VentanaRegistro extends JFrame {
             }
 
             public void habilitarBotonContinuar(){
-
+                boolean habilitar = !campoDocumento.getText().isEmpty() &&
+                            !campoNombre.getText().isEmpty() &&
+                            !campoCorreo.getText().isEmpty() &&
+                            !campoTelefono.getText().isEmpty() &&
+                            !campoNacionalidad.getText().isEmpty();
+                botonContinuar.setEnabled(habilitar);
             }
         };
         campoDocumento.getDocument().addDocumentListener(documentListener);
@@ -132,7 +140,12 @@ public class VentanaRegistro extends JFrame {
 
         botonContinuar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Realizar acción al hacer clic en Continuar
+                System.out.println(campoDocumento.getText());
+                System.out.println(campoNombre.getText());
+                System.out.println(campoCorreo.getText());
+                System.out.println(campoTelefono.getText());
+                crearUsuario();
+                
             }
         });
 
@@ -144,4 +157,22 @@ public class VentanaRegistro extends JFrame {
         setSize(500, 600);
         setVisible(true);
     }
+
+    public void crearUsuario() {
+        JTabbedPane tab1 = new JTabbedPane();
+
+        JPanel panelUsuarioContraseña = new JPanel(new GridLayout(0, 2));
+        JLabel labelUsuario = new JLabel("Nombre de Usuario:");
+        JTextField campoUsuario = new JTextField();
+        JLabel labelContraseña = new JLabel("Contraseña:");
+        JPasswordField campoContraseña = new JPasswordField();
+        panelUsuarioContraseña.add(labelUsuario);
+        panelUsuarioContraseña.add(campoUsuario);
+        panelUsuarioContraseña.add(labelContraseña);
+        panelUsuarioContraseña.add(campoContraseña);
+        tab1.addTab("Usuario y Contraseña", panelUsuarioContraseña);
+        add(tab1);
+    }
+
+
 }
