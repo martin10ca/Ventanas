@@ -2,16 +2,18 @@ package clases;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class PanelesModificaciones {
     private static boolean booleanEleccion;
-    private static String retornoString;
+    private static boolean booleanAccion;
 
     public static boolean preguntaModificaciones(JPanel mainPanel,String s) {
         booleanEleccion=false;
+        booleanAccion=false;
         JPanel panel= new JPanel();
         panel.setBounds(0, 0, 0, 0);
 
@@ -40,38 +42,78 @@ public class PanelesModificaciones {
             public void actionPerformed(ActionEvent e) {
             	if (opcion1.isSelected()) {
                     booleanEleccion=true;
-                }}});
+                }
+                else{
+                    booleanEleccion=false;
+                }
+                booleanAccion=true;
+                panel.setVisible(false); // Oculta el panel después de la selección.
+
+                }});
         panel.add(new JLabel("¿Desea modificar "+s+"?"));
         panel.add(opcion1);
         panel.add(opcion2);
         panel.add(avanzar);
         panel.setVisible(true);
         mainPanel.add(panel);
+        mainPanel.revalidate();
+        mainPanel.repaint();
+        // Espera a que el usuario haga una selección antes de retornar.
+        while (!booleanAccion) {
+            try {
+                Thread.sleep(100); // Pequeña pausa para evitar bucle de CPU.
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+        }
         return booleanEleccion;
     }
-    public static String modificacionString(JPanel mainPanel, String nom,String ejem){
-        retornoString="";
-        JPanel panel= new JPanel();
-        panel.setBounds(0, 0, 0, 0);
-        PlaceHolderTextField input=new PlaceHolderTextField(ejem); 
-        JButton avanzar = new JButton("Avanzar");
-        avanzar.setEnabled(false);
 
-        input.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                avanzar.setEnabled(!input.getText().trim().isEmpty());
-        }});
-         avanzar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                retornoString=input.getText();
-        }});
-        panel.add(new JLabel(nom));
-        panel.add(input);
-        panel.add(avanzar);
-        panel.setVisible(true);
-        mainPanel.add(panel);
-        return  retornoString;
+        public static String modificacionString(JPanel mainPanel, String nom, String ejem) throws InterruptedException, ExecutionException {
+            JPanel panel = new JPanel();
+            panel.setBounds(0, 0, 0, 0);
+            panel.add(new JLabel("Después de ingresar el texto presione Enter."));
+            panel.add(new JLabel("\n"));
+            PlaceHolderTextField input = new PlaceHolderTextField(ejem);
+            JButton avanzar = new JButton("Avanzar");
+            avanzar.setEnabled(false);
+
+            CompletableFuture<String> result = new CompletableFuture<>();
+            // Evento para el botón "Avanzar"
+            avanzar.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (!input.getText().trim().isEmpty()) {
+                        result.complete(input.getText());
+                        panel.setVisible(false); // Oculta el panel después de la selección.
+                    }
+                }
+            });
+
+            input.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    booleanAccion = !input.getText().trim().isEmpty();
+                    avanzar.setEnabled(booleanAccion);
+                }
+            });
+
+            panel.add(new JLabel(nom));
+            panel.add(input);
+            panel.add(avanzar);
+            mainPanel.add(panel);
+            mainPanel.revalidate();
+            mainPanel.repaint();
+
+            return result.get();
+        }
+    public static void main(String[] args) throws InterruptedException, ExecutionException {
+        // Tu código va aquí
+        JFrame frame = new JFrame();
+        JPanel panel = new JPanel();
+        frame.add(panel);
+        frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
+        System.out.println(preguntaModificaciones(panel, "nombre"));
     }
 }
