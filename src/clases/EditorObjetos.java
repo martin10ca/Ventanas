@@ -13,7 +13,7 @@ public class EditorObjetos {
     private  String[] pasos;
     private int pasoActual = 0;
 
-    public void EditorSede(JPanel mainPanel) {
+    public void editorSede(JPanel mainPanel) {
         this.mainPanel = mainPanel;
         this.cardLayout = new CardLayout();
         this.cardPanel = new JPanel(cardLayout);
@@ -22,7 +22,7 @@ public class EditorObjetos {
         mainPanel.add(cardPanel);
         crearPasosSede();
     }
-    public void EditorSeguro(JPanel mainPanel) {
+    public void editorSeguro(JPanel mainPanel) {
         this.mainPanel = mainPanel;
         this.cardLayout = new CardLayout();
         this.cardPanel = new JPanel(cardLayout);
@@ -254,7 +254,7 @@ public class EditorObjetos {
             frame.add(mainPanel);
 
             EditorObjetos editor = new EditorObjetos();
-            editor.EditorSeguro(mainPanel);
+            editor.editorSeguro(mainPanel);
             editor.editar();
 
             frame.setVisible(true);

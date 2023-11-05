@@ -9,6 +9,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.JTextComponent;
 
 import java.awt.*;
+import java.awt.Dialog.ModalExclusionType;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.font.TextAttribute;
@@ -195,8 +197,21 @@ public class VentanaAdmin {
     }
         private static JTabbedPane menuPersonal(){
         JTabbedPane menu = new JTabbedPane(JTabbedPane.LEFT);
-        menu.add("Registrar administrador local",new JPanel());
-        menu.add("Actualizar sede de un administrador local",new JPanel());
+        JPanel panel1 = new JPanel();
+        nuevoPanel1Personal(panel1);
+        menu.add("Registrar administrador local",panel1);
+        JPanel panel2= new JPanel();
+        nuevoPanel2Personal(panel2);
+        menu.add("Actualizar sede de un administrador local",panel2);
+        menu.addChangeListener(new ChangeListener() {
+        public void stateChanged(ChangeEvent e) {
+        // Obtener el índice de la pestaña seleccionada
+            int selectedIndex = menu.getSelectedIndex();
+                if (selectedIndex==1){
+                    nuevoPanel1Personal(panel1);
+                }
+                else{nuevoPanel2Personal(panel2);}
+        }});
         
         menu.setSelectedIndex(-1);
         return menu;
@@ -468,7 +483,7 @@ public class VentanaAdmin {
                 panel2.add(panel2a);
                 // Agrega panel2b a panel2
                 EditorObjetos editor = new EditorObjetos();
-                editor.EditorSede(panel2b);
+                editor.editorSede(panel2b);
                 editor.editar();
                 panel2.add(panel2b);
                 frame.revalidate();
@@ -506,20 +521,43 @@ public class VentanaAdmin {
             gridLayout1.setVgap(10);
             panel2.setPreferredSize(new Dimension(0, 400));
             panel2.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0)); // Establece un FlowLayout sin relleno
-            panel2.add(new JLabel("Ingrese la información del nuevo seguro"));
+            panel2.add(new JLabel("Seleccione el seguro que desea modificar"));
             panel2.add(new JLabel(""));
             panel2.setLayout(gridLayout1);
-            panel2.add(new JLabel("Descripción del seguro:"));
-            PlaceHolderTextField descripcion= new PlaceHolderTextField("Ej: Seguro ante robos");
-            panel2.add(descripcion);
-            panel2.add(new JLabel("Porcentaje de la tarifa diaria a cobrar:"));
-            DefaultComboBoxModel<Double> opciones = new DefaultComboBoxModel<>();
-            for (double i = 0.1; i <= 2.0; i += 0.1) {
-                double numeroRedondeado = Math.round(i * 10.0) / 10.0;
-                opciones.addElement(numeroRedondeado);
-            }
-            JComboBox<Double> pctg = new JComboBox<>(opciones);
-            panel2.add(pctg);
+            //TODO opciones
+            String[] opciones = {"Seguro1","Seguro2"};
+            JComboBox<String> seguros = new JComboBox<>(opciones);
+            panel2.add(seguros);
+            JButton avanzar = new JButton("Modificar Seguro");
+            panel2.add(Box.createRigidArea(new Dimension(0,200)));
+            panel2.add(Box.createRigidArea(new Dimension(0,200)));
+            panel2.add(Box.createRigidArea(new Dimension(0,200)));
+            panel2.add(avanzar);
+            JPanel panel2a= new JPanel();
+            JPanel panel2b= new JPanel();
+            avanzar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                panel2.removeAll();
+                panel2.setLayout(new GridLayout(0, 1));
+                // Agrega un cuadro de código de sede
+                JLabel label = new JLabel("\tCódigo de Seguro: ");
+                Border border = new LineBorder(Color.decode("#99A0A2"), 1);
+                label.setBorder(border);
+                label.setBackground(Color.decode("#CCEDF7"));
+                label.setOpaque(true);
+                label.setPreferredSize(new Dimension(170, 25));
+                panel2a.add(label);
+                // Agrega panel2a a panel2
+                panel2.add(panel2a);
+                // Agrega panel2b a panel2
+                EditorObjetos editor = new EditorObjetos();
+                editor.editorSeguro(panel2b);
+                editor.editar();
+                panel2.add(panel2b);
+                frame.revalidate();
+                frame.repaint();}});
+
 
         }
             public static void nuevoPanel3Seguros(JPanel panel3){
@@ -528,23 +566,185 @@ public class VentanaAdmin {
             gridLayout1.setVgap(10);
             panel3.setPreferredSize(new Dimension(0, 400));
             panel3.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0)); // Establece un FlowLayout sin relleno
-            panel3.add(new JLabel("Ingrese la información del nuevo seguro"));
+            panel3.add(new JLabel("Seleccione el seguro que desea eliminar"));
             panel3.add(new JLabel(""));
             panel3.setLayout(gridLayout1);
-            panel3.add(new JLabel("Descripción del seguro:"));
-            PlaceHolderTextField descripcion= new PlaceHolderTextField("Ej: Seguro ante robos");
-            panel3.add(descripcion);
-            panel3.add(new JLabel("Porcentaje de la tarifa diaria a cobrar:"));
-            DefaultComboBoxModel<Double> opciones = new DefaultComboBoxModel<>();
-            for (double i = 0.1; i <= 2.0; i += 0.1) {
-                double numeroRedondeado = Math.round(i * 10.0) / 10.0;
-                opciones.addElement(numeroRedondeado);
-            }
-            JComboBox<Double> pctg = new JComboBox<>(opciones);
-            panel3.add(pctg);
-
+            //TODO opciones
+            String[] opciones = {"Seguro1","Seguro2"};
+            JComboBox<String> seguros = new JComboBox<>(opciones);
+            panel3.add(seguros);
+            JButton avanzar = new JButton("Eliminar Seguro");
+            panel3.add(Box.createRigidArea(new Dimension(0,200)));
+            panel3.add(Box.createRigidArea(new Dimension(0,200)));
+            panel3.add(Box.createRigidArea(new Dimension(0,200)));
+            panel3.add(avanzar);
+            avanzar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                refresh(panel3);
+            }});
         }
 
+
+
+            public static void nuevoPanel1Personal(JPanel panel1){
+            refresh(panel1);
+            GridLayout gridLayout1 = new GridLayout(0, 2);
+            gridLayout1.setVgap(10);
+            panel1.setPreferredSize(new Dimension(0, 400));
+            panel1.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0)); // Establece un FlowLayout sin relleno
+            panel1.add(new JLabel("Ingrese la información del nuevo administrador local"));
+            panel1.add(new JLabel(""));
+            panel1.setLayout(gridLayout1);
+            panel1.add(new JLabel("Login"));
+            PlaceHolderTextField login= new PlaceHolderTextField("Ej: m.acosta");
+            panel1.add(login);
+            JButton avanzar = new JButton("Siguiente");
+            panel1.add(Box.createRigidArea(new Dimension(0,200)));
+            panel1.add(Box.createRigidArea(new Dimension(0,200)));
+            panel1.add(avanzar);
+            avanzar.setVisible(false);
+            login.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    avanzar.setVisible(!login.getText().trim().isEmpty());
+                }});
+            avanzar.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    //TODO verificar login
+                    boolean existeLogin=false;
+                    if (!existeLogin){
+                        refresh(panel1);
+                        login.setEditable(false);
+                        panel1.add(new JLabel("Complete el registro del usuario"));
+                        panel1.add(new JLabel(""));
+                        panel1.add(new JLabel("Password"));
+                        PlaceHolderTextField password = new PlaceHolderTextField("acosta123");
+                        panel1.add(password);
+                        panel1.add(new JLabel("Sede que administrará"));
+                        // TODO
+                        String[] opciones = {"Sede1", "Sede2"};
+                        JComboBox<String> sedes = new JComboBox<>(opciones);
+                        panel1.add(sedes);
+                        JButton avanzar2 = new JButton("Agregar administrador local");
+                        panel1.add(avanzar2);
+                        avanzar2.setVisible(false);
+                        password.addActionListener(new ActionListener(){
+                            public void actionPerformed(ActionEvent e) {
+                                avanzar2.setVisible(!password.getText().trim().isEmpty());
+                                }});          
+                        avanzar2.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                // TODO: Realizar acciones al presionar "avanzar2"
+                                System.out.println("login:"+login.getText());
+                                System.out.println("Opcion sede:"+sedes.getSelectedItem().toString());
+                                System.out.println(("password:"+password.getText()));
+                                CambioGuardadoDialog();
+                                refresh(panel1);
+                            }
+                        }); 
+                    }}});}
+                        
+        public static void nuevoPanel2Personal(JPanel panel2){
+            refresh(panel2);
+            GridLayout gridLayout1 = new GridLayout(0, 2);
+            gridLayout1.setVgap(10);
+            panel2.setPreferredSize(new Dimension(0, 400));
+            panel2.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0)); // Establece un FlowLayout sin relleno
+            panel2.add(new JLabel("Ingrese el login del administrador local"));
+            panel2.add(new JLabel(""));
+            panel2.setLayout(gridLayout1);
+            panel2.add(new JLabel("Login"));
+            PlaceHolderTextField login= new PlaceHolderTextField("Ej: m.acosta");
+            panel2.add(login);
+            JButton avanzar = new JButton("Siguiente");
+            panel2.add(Box.createRigidArea(new Dimension(0,200)));
+            panel2.add(Box.createRigidArea(new Dimension(0,200)));
+            panel2.add(avanzar);
+            avanzar.setVisible(false);
+            login.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    avanzar.setVisible(!login.getText().trim().isEmpty());
+                }});
+            avanzar.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    //TODO verificar si es admin
+                    boolean esAdmin=false;
+                    if (!esAdmin){
+                        refresh(panel2);
+                        login.setEditable(false);
+                        panel2.add(new JLabel("Complete la actualización del usuario"));
+                        panel2.add(new JLabel(""));
+
+                        panel2.add(new JLabel("Password"));
+                        PlaceHolderTextField password = new PlaceHolderTextField("acosta123");
+                        panel2.add(password);
+                        panel2.add(new JLabel("Sede que administrará"));
+                        // TODO
+                        String[] opciones = {"Sede1", "Sede2"};
+                        JComboBox<String> sedes = new JComboBox<>(opciones);
+                        panel2.add(sedes);
+                        JButton avanzar2 = new JButton("Actualizar administrador local");
+                        panel2.add(avanzar2);
+                        avanzar2.setVisible(false);
+                        password.addActionListener(new ActionListener(){
+                            public void actionPerformed(ActionEvent e) {
+                                avanzar2.setVisible(!password.getText().trim().isEmpty());
+                                }});          
+                        avanzar2.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent e) {
+                                // TODO: Realizar acciones al presionar "avanzar2"
+                                System.out.println("login:"+login.getText());
+                                System.out.println("Opcion sede:"+sedes.getSelectedItem().toString());
+                                System.out.println(("password:"+password.getText()));
+                                CambioGuardadoDialog();
+                                refresh(panel2);
+                            }
+                        }); 
+                    }}});}
+
+        public static void nuevoPanelTarifas(JPanel panel){
+            panel.setLayout(new GridLayout(0, 2));
+            panel.add(new JLabel("Nuevo Precio:"));
+            PlaceHolderTextField precio= new PlaceHolderTextField("Ej: 30000");
+            panel.add(precio);
+            JButton avanzar= new JButton("Actualizar precio");
+            precio.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e) {
+                    boolean esNum=false;
+                    try {
+                        float numero = Float.parseFloat(precio.getText());
+                        esNum=true;
+                    } catch (NumberFormatException f) {
+                    }
+                    avanzar.setVisible(!precio.getText().trim().isEmpty()&& esNum);
+                }});
+            avanzar.addActionListener(new ActionListener(){
+                public void actionPerformed(ActionEvent e){
+                    
+            }});
+        }
+        public static void nuevoPanelPeriodos(){
+            
+        }
+        public static void CambioGuardadoDialog() {
+            JDialog dialog= new JDialog();
+            GridLayout gridLayout1 = new GridLayout(1, 0);
+            dialog.setLayout(gridLayout1);
+            dialog.setTitle("Notificacion");
+            dialog.setModalityType(ModalityType.APPLICATION_MODAL); // Bloquea otras ventanas mientras está abierta
+            dialog.setSize(300, 200);
+            dialog.setLocationRelativeTo(null); // Centra el diálogo en la pantalla
+            JLabel label=new JLabel("    Cambio/s guardado/s"); 
+            dialog.add(label);
+            JButton okButton = new JButton("OK");
+            okButton.setBounds(100, 25, 70, 30); // Establece la posición y tamaño del botón
+            okButton.addActionListener(e -> {
+                dialog.dispose(); // Cierra el diálogo al hacer clic en el botón "OK"
+            });
+    
+            dialog.add(okButton);
+            dialog.setVisible(true);
+        }
         public static void refresh(JPanel panel){
             panel.removeAll();
             panel.repaint();
