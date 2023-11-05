@@ -1,9 +1,12 @@
-package clases;
+package clases.registro;
 
 import java.awt.GridLayout;
 
 import javax.swing.*;
 import javax.swing.event.DocumentListener;
+
+import clases.PlaceHolderTextField;
+
 import javax.swing.event.DocumentEvent;
 import java.util.Calendar;
 import java.awt.*;
@@ -69,6 +72,7 @@ public class VentanaRegistro extends JFrame {
         String[] meses = {"01", "02", "03", "04", "05", "06", "07",
                          "08", "09", "10", "11", "12"};
         listaMes = new JComboBox<>(meses);
+        actualizarDias();
         String mesSeleccionado = (String) listaMes.getSelectedItem();
         if ("02".equals(mesSeleccionado)) {
             limite = 29;
@@ -80,7 +84,7 @@ public class VentanaRegistro extends JFrame {
         for (int i = 1; i <= limite; i++) {
             listaDia.addItem(String.valueOf(i));
         }
-
+        
         etiquetaNacionalidad = new JLabel("Nacionalidad: ");
         campoNacionalidad = new PlaceHolderTextField("Ej: Colombia");
 
@@ -144,8 +148,10 @@ public class VentanaRegistro extends JFrame {
                 System.out.println(campoNombre.getText());
                 System.out.println(campoCorreo.getText());
                 System.out.println(campoTelefono.getText());
-                crearUsuario();
-                
+                tab1 = new JTabbedPane();
+                tab1.addTab("Usuario y Contraseña", new crearUsuario());
+                add(tab1);
+                revalidate();
             }
         });
 
@@ -157,22 +163,13 @@ public class VentanaRegistro extends JFrame {
         setSize(500, 600);
         setVisible(true);
     }
+    private void actualizarDias(){
+            listaDia.removeAllItems();
+            for (int i = 1; i <= limite; i++) {
+                listaDia.addItem(String.valueOf(i));
+            }
+        }
 
-    public void crearUsuario() {
-        JTabbedPane tab1 = new JTabbedPane();
-
-        JPanel panelUsuarioContraseña = new JPanel(new GridLayout(0, 2));
-        JLabel labelUsuario = new JLabel("Nombre de Usuario:");
-        JTextField campoUsuario = new JTextField();
-        JLabel labelContraseña = new JLabel("Contraseña:");
-        JPasswordField campoContraseña = new JPasswordField();
-        panelUsuarioContraseña.add(labelUsuario);
-        panelUsuarioContraseña.add(campoUsuario);
-        panelUsuarioContraseña.add(labelContraseña);
-        panelUsuarioContraseña.add(campoContraseña);
-        tab1.addTab("Usuario y Contraseña", panelUsuarioContraseña);
-        add(tab1);
-    }
-
+    
 
 }
