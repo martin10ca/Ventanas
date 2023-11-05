@@ -2,6 +2,7 @@ package clases;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -95,25 +96,142 @@ public class VentanaAdmin {
     private static JTabbedPane menuVehiculos(){
         JTabbedPane menu = new JTabbedPane(JTabbedPane.LEFT);
         menu.setPreferredSize(new Dimension(600,0));
-        GridLayout gridLayout1 = new GridLayout(0, 2);
-        gridLayout1.setVgap(10);
-
         //Opción 1
         JPanel panel1= new JPanel();
+        nuevoPanel1Vehiculo(panel1);
+        menu.add("Registrar Vehículo",panel1);
+        //Opcion 2
+        JPanel panel2= new JPanel();
+        nuevoPanel2Vehiculo(panel2);
+        menu.add("Monitorear/ Actualizar vehículo",panel2);
+        //Opcion 3
+        JPanel panel3= new JPanel();
+        nuevoPanel3Vehiculo(panel3);
+        menu.add("Obtener visualización de alto nivel",panel3);
+        menu.addChangeListener(new ChangeListener() {
+        public void stateChanged(ChangeEvent e) {
+            // Obtener el índice de la pestaña seleccionada
+            int selectedIndex = menu.getSelectedIndex();
+            if (selectedIndex==1){
+                nuevoPanel1Vehiculo(panel1);
+                }
+            else if (selectedIndex==2){
+                nuevoPanel2Vehiculo(panel2);
+            }
+            else{nuevoPanel3Vehiculo(panel3);}
+        }});
+        menu.setSelectedIndex(-1);
+        return menu;
+    }
+
+        private static JTabbedPane menuCategorias(){
+        JTabbedPane menu = new JTabbedPane(JTabbedPane.LEFT);
+        JPanel panel1= new JPanel();
+        nuevoPanel1Categorias(panel1);
+        menu.add("Registrar categoría", panel1);
+        menu.addChangeListener(new ChangeListener() {
+        public void stateChanged(ChangeEvent e) {
+            // Obtener el índice de la pestaña seleccionada
+            int selectedIndex = menu.getSelectedIndex();
+            if (selectedIndex==1){
+                nuevoPanel1Categorias(panel1);
+                }
+        }});
+        menu.setSelectedIndex(-1);
+        return menu;
+    }
+
+        private static JTabbedPane menuSedes(){
+        JTabbedPane menu = new JTabbedPane(JTabbedPane.LEFT);
+        //Opcion 1
+        JPanel panel1= new JPanel();
+        nuevoPanel1Sedes(panel1);
+        menu.add("Registrar Sede",panel1);
+        //Opcion 2
+        JPanel panel2= new JPanel();
+        nuevoPanel2Sedes(panel2);
+        menu.add("Modificar Sede",panel2);
+        menu.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                // Obtener el índice de la pestaña seleccionada
+                int selectedIndex = menu.getSelectedIndex();
+                if (selectedIndex==1){
+                    nuevoPanel1Sedes(panel1);
+                }
+                else {nuevoPanel2Sedes(panel2);}
+        }});
+
+        
+        menu.setSelectedIndex(-1);
+        return menu;
+    }
+        private static JTabbedPane menuSeguros(){
+        JTabbedPane menu = new JTabbedPane(JTabbedPane.LEFT);
+        //Opcion 1
+        JPanel panel1= new JPanel();
+        nuevoPanel1Seguros(panel1);
+        menu.add("Registrar Seguro",panel1);
+        //Opcion 2
+        JPanel panel2= new JPanel();
+        nuevoPanel2Seguros(panel2);
+        menu.add("Modificar Seguro",panel2);
+        //Opcion 3
+        JPanel panel3= new JPanel();
+        nuevoPanel3Seguros(panel3);
+        menu.add("Eliminar Seguro",panel3);
+        menu.addChangeListener(new ChangeListener() {
+        public void stateChanged(ChangeEvent e) {
+        // Obtener el índice de la pestaña seleccionada
+            int selectedIndex = menu.getSelectedIndex();
+                if (selectedIndex==1){
+                    nuevoPanel1Seguros(panel1);
+                }
+                else if (selectedIndex==2) {
+                    nuevoPanel2Seguros(panel2);}
+                else {nuevoPanel3Seguros(panel3);}
+        }});
+        menu.setSelectedIndex(-1);
+        return menu;
+    }
+        private static JTabbedPane menuPersonal(){
+        JTabbedPane menu = new JTabbedPane(JTabbedPane.LEFT);
+        menu.add("Registrar administrador local",new JPanel());
+        menu.add("Actualizar sede de un administrador local",new JPanel());
+        
+        menu.setSelectedIndex(-1);
+        return menu;
+    }
+        private static JTabbedPane menuTarifasPeriodos(){
+        JTabbedPane menu = new JTabbedPane(JTabbedPane.LEFT);
+        menu.add("Actualizar costo por conductor adicional",new JPanel());
+        menu.add("Actualizar costo por traslado de vehículo",new JPanel());
+        menu.add("Actualizar periodo de temporada alta",new JPanel());
+        menu.add("Actualizar periodo de temporada baja",new JPanel());
+        
+        menu.setSelectedIndex(-1);
+        return menu;
+    }
+        private static void nuevoPanel1Vehiculo(JPanel panel1){
+        refresh(panel1);
         panel1.setPreferredSize(new Dimension(0, 400));
         panel1.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0)); // Establece un FlowLayout sin relleno
-
+        GridLayout gridLayout1 = new GridLayout(0, 2);
+        gridLayout1.setVgap(10);
         panel1.add(new JLabel("Ingrese la información del nuevo vehículo"));
         panel1.add(new JLabel(""));
         panel1.setLayout(gridLayout1);
         panel1.add(new JLabel("Placa:"));
-        panel1.add(new PlaceHolderTextField("Ej: ABC123"));
+        PlaceHolderTextField placa=new PlaceHolderTextField("Ej: ABC123");
+        panel1.add(placa);
+        PlaceHolderTextField marca= new PlaceHolderTextField("Ej: Chevrolet");
         panel1.add(new JLabel("Marca:"));
-        panel1.add(new PlaceHolderTextField("Ej: Chevrolet"));
+        panel1.add(marca);
         panel1.add(new JLabel("Modelo:"));
-        panel1.add(new PlaceHolderTextField("Ej: Aveo"));
+        PlaceHolderTextField modelo = new PlaceHolderTextField("Ej: Aveo");
+        panel1.add(modelo);
         panel1.add(new JLabel("Color:"));
-        panel1.add(new PlaceHolderTextField("Ej: Azul"));
+        PlaceHolderTextField color= new PlaceHolderTextField("Ej: Azul");
+        panel1.add(color);
         panel1.add(new JLabel("Transmisión:"));
         panel1.add(new JLabel(""));
         ButtonGroup opcionTransmision= new ButtonGroup();
@@ -125,23 +243,23 @@ public class VentanaAdmin {
         panel1.add(automatica);
         panel1.add(new JLabel("Categoria:"));
         //TODO con un for añadir categorias
-        JComboBox categorias= new JComboBox<>();
-        categorias.add(new JButton("Opcion 1"));
+        String[] opcionesCategorias= {"Categoria1","Categoria2"};
+        JComboBox categorias= new JComboBox<>(opcionesCategorias);
         categorias.setPreferredSize(new Dimension(100, 20)); 
         categorias.setSelectedItem(-1);
         panel1.add(categorias);
         panel1.add(new JLabel("Sedes:"));
         //TODO con un for añadir sedes
-        JComboBox sedes= new JComboBox<>();
-        sedes.add(new JButton("Opcion 1"));
+        String[] opcionesSedes= {"Sede1","Sede2"};
+        JComboBox sedes= new JComboBox<String>(opcionesSedes);
         sedes.setPreferredSize(new Dimension(20, 20)); 
         sedes.setSelectedItem(-1);
         panel1.add(sedes);
         JButton avanzar1= new JButton("Registrar vehículo");
         panel1.add(avanzar1);
-        menu.add("Registrar Vehículo",panel1);
-        //Opcion 2
-        JPanel panel2= new JPanel();
+    }
+        private static void nuevoPanel2Vehiculo(JPanel panel2){
+        refresh(panel2);
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
             //Busqueda Carro
         JPanel panel2a= new JPanel();
@@ -167,7 +285,6 @@ public class VentanaAdmin {
         menuInterno.add("Obtener archivo log", new JPanel());
         JPanel panel2c= new JPanel();
         panel2c.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 0)); // Establece un FlowLayout sin relleno
-
         panel2c.add(new JLabel("Elija la sede a la que se trasladará el vehículo"));
         //TODO lista sedes
         JComboBox sedes2 = new JComboBox<>();
@@ -181,16 +298,11 @@ public class VentanaAdmin {
         panel2c.add(avanzar);
         menuInterno.add("Trasladar", panel2c);
         panel2.add(menuInterno);
-        
-
-
-        
-        menu.add("Monitorear/ Actualizar vehículo",panel2);
-        //Opcion 3
-        JPanel panel3= new JPanel();
+    }
+        private static void nuevoPanel3Vehiculo(JPanel panel3){
+        refresh(panel3);
         panel3.setLayout(new BoxLayout(panel3, BoxLayout.Y_AXIS));
         panel3.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 0)); // Establece un FlowLayout sin relleno
-
         panel3.add(new JLabel("Elija la sede de la que desea visualizar la gráfica de alto nivel"));
         //TODO lista sedes
         JComboBox sedes3 = new JComboBox<>();
@@ -201,22 +313,16 @@ public class VentanaAdmin {
         JButton avanzar2= new JButton("Continuar");
         panel3.add(avanzar2);
         //TODO -> panel 3a va a tener la grafica
-
         JPanel panel3a= new JPanel();
         panel3.add(panel3a);
-        menu.add("Obtener visualización de alto nivel",panel3);
-        menu.setSelectedIndex(-1);
-        return menu;
     }
 
-        private static JTabbedPane menuCategorias(){
-        JTabbedPane menu = new JTabbedPane(JTabbedPane.LEFT);
-        GridLayout gridLayout1 = new GridLayout(0, 2);
-        gridLayout1.setVgap(10);
-        JPanel panel1= new JPanel();
+        private static void nuevoPanel1Categorias(JPanel panel1){
+        refresh(panel1);
         panel1.setPreferredSize(new Dimension(0, 400));
         panel1.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0)); // Establece un FlowLayout sin relleno
-
+        GridLayout gridLayout1 = new GridLayout(0, 2);
+        gridLayout1.setVgap(10);
         panel1.add(new JLabel("Ingrese la información de la nueva categoría"));
         panel1.add(new JLabel(""));
         panel1.setLayout(gridLayout1);
@@ -260,17 +366,11 @@ public class VentanaAdmin {
         panel1.add(categorias);
         JButton avanzar= new JButton("Registrar Categoría");
         panel1.add(avanzar);
-        menu.add("Registrar categoría", panel1);
-        menu.setSelectedIndex(-1);
-        return menu;
     }
-
-        private static JTabbedPane menuSedes(){
-        JTabbedPane menu = new JTabbedPane(JTabbedPane.LEFT);
+        private static void nuevoPanel1Sedes(JPanel panel1){
+        refresh(panel1);
         GridLayout gridLayout1 = new GridLayout(0, 3);
         gridLayout1.setVgap(10);
-        //Opcion 1
-        JPanel panel1= new JPanel();
         panel1.setPreferredSize(new Dimension(0, 400));
         panel1.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0)); // Establece un FlowLayout sin relleno
         panel1.add(new JLabel("Ingrese la información de la nueva sede"));
@@ -283,18 +383,21 @@ public class VentanaAdmin {
         panel1.add(new JLabel("Ubicacion de la sede:"));
         panel1.add(new PlaceHolderTextField("Ej: Cl. 57c Sur #87-21"));
         panel1.add(new JLabel(""));
-        panel1.add(new JLabel("Horario de apertura (entre semana):"));
-        DefaultComboBoxModel<Integer> opcionesHora = new DefaultComboBoxModel<>();
+        panel1.add(new JLabel("Horario de apertura entre semana (hh mm):"));
+        DefaultComboBoxModel<Integer> opcionesHora1 = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<Integer> opcionesHora2 = new DefaultComboBoxModel<>();
         for (int i = 1; i <= 23; i++) {
-            opcionesHora.addElement(i);
+            opcionesHora1.addElement(i);
+            opcionesHora2.addElement(i);
+
         }
         String[] opcionesMinutos = {"00"};
-        JComboBox<Integer> hora1 = new JComboBox<>(opcionesHora);
+        JComboBox<Integer> hora1 = new JComboBox<>(opcionesHora1);
         JComboBox<String> min1 = new JComboBox<>(opcionesMinutos);
         panel1.add(hora1);
         panel1.add(min1);
-        panel1.add(new JLabel("Horario de apertura (fin de semana):"));        
-        JComboBox<Integer> hora2 = new JComboBox<>(opcionesHora);
+        panel1.add(new JLabel("Horario de apertura para fin de semana (hh mm):"));        
+        JComboBox<Integer> hora2 = new JComboBox<>(opcionesHora2);
         JComboBox<String> min2 = new JComboBox<>(opcionesMinutos);
         panel1.add(hora2);
         panel1.add(min2);
@@ -311,9 +414,9 @@ public class VentanaAdmin {
         JButton avanzar= new JButton("Registrar Sede");
         panel1.add(avanzar);
 
-        menu.add("Registrar Sede",panel1);
-        //Opcion 2
-        JPanel panel2= new JPanel();
+    }
+        public static void nuevoPanel2Sedes(JPanel panel2){
+        refresh(panel2);
         panel2.setPreferredSize(new Dimension(0, 400));
         panel2.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
         //TODO sedes
@@ -325,37 +428,19 @@ public class VentanaAdmin {
         JButton avanzar2 = new JButton("Modificar");
         panel2.add(avanzar2);
         avanzar2.setEnabled(false);  // Inicialmente deshabilita el botón
-
         sedes.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {
-                updateButtonState();
-            }
+            public void actionPerformed(ActionEvent e) {updateButtonState();}
             private void updateButtonState() {
             if (sedes.getSelectedItem() != null && !sedes.getSelectedItem().toString().isEmpty()) {
-                avanzar2.setEnabled(true);  // Habilita el botón "avanzar2" si se ha seleccionado una opción o se ha ingresado texto.
-            } else {
-                avanzar2.setEnabled(false); // Deshabilita el botón "avanzar2" si no hay una opción seleccionada o no hay texto ingresado.
-            }
-        }
-        });
-
+                avanzar2.setEnabled(true);} else {avanzar2.setEnabled(false);}}});
         ((JTextComponent) sedes.getEditor().getEditorComponent()).getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void insertUpdate(DocumentEvent e) {
-                updateButtonState();
-            }
-
+            public void insertUpdate(DocumentEvent e) {updateButtonState();}
             @Override
-            public void removeUpdate(DocumentEvent e) {
-                updateButtonState();
-            }
-
+            public void removeUpdate(DocumentEvent e) {updateButtonState();}
             @Override
-            public void changedUpdate(DocumentEvent e) {
-                updateButtonState();
-            }
-
+            public void changedUpdate(DocumentEvent e) {updateButtonState();}
             private void updateButtonState() {
                 if (sedes.getSelectedItem() != null && !sedes.getSelectedItem().toString().isEmpty()) {
                     avanzar2.setEnabled(true);  // Habilita el botón "avanzar2" si se ha seleccionado una opción o se ha ingresado texto.
@@ -382,102 +467,89 @@ public class VentanaAdmin {
                 // Agrega panel2a a panel2
                 panel2.add(panel2a);
                 // Agrega panel2b a panel2
-                editarSede(panel2b);
+                EditorObjetos editor = new EditorObjetos();
+                editor.EditorSede(panel2b);
+                editor.editar();
+                panel2.add(panel2b);
                 frame.revalidate();
-                frame.repaint();
-
-                // Pregunta por la modificación del nombre de la sede
-                boolModificar = PanelesModificaciones.preguntaModificaciones(panel2b, "el nombre de la sede");
-                refrescar(panel2b);
-                refrescar(panel2);
-                if (boolModificar) {
-                    // Realiza la modificación del nombre
-                    String nombre="";
-                    //try {
-                    //    nombre = PanelesModificaciones.modificacionString(panel2b, "Nombre", "Ej: Sede Bosa");
-                    //} catch (InterruptedException e1) {e1.printStackTrace();} catch (ExecutionException e1) {e1.printStackTrace();}
-                    boolModificar = false;
-                    // TODO: Realiza la operación correspondiente con el nombre
-                    System.out.println(nombre);
-                }
-                // Limpia los paneles nuevamente
-                // Pregunta por la modificación de la ubicación de la sede
-                boolModificar = PanelesModificaciones.preguntaModificaciones(panel2b, "la ubicación de la sede");
-                if (boolModificar) {
-                    // Realiza la modificación de la ubicación
-                    String ubicacion="";
-                    //try {
-                    //    ubicacion = PanelesModificaciones.modificacionString(panel2b, "Ubicación", "Ej: Cl. 57c Sur #87-21");
-                    //} catch (InterruptedException e1) {e1.printStackTrace();} catch (ExecutionException e1) {e1.printStackTrace();}
-                    boolModificar = false;
-                    // TODO: Realiza la operación correspondiente con la ubicación
-                    System.out.println(ubicacion);
-                }
-                }});
-
-
-
-
-    
-
-
-
-
-
-
-
-        menu.add("Modificar Sede",panel2);
-
-        
-        menu.setSelectedIndex(-1);
-        return menu;
+                frame.repaint();}});
     }
-        private static JTabbedPane menuSeguros(){
-        JTabbedPane menu = new JTabbedPane(JTabbedPane.LEFT);
-        menu.add("Registrar Seguro",new JPanel());
-        menu.add("Modificar Seguro",new JPanel());
-        menu.add("Eliminar Seguro",new JPanel());
-
-        menu.setSelectedIndex(-1);
-        return menu;
-    }
-        private static JTabbedPane menuPersonal(){
-        JTabbedPane menu = new JTabbedPane(JTabbedPane.LEFT);
-        menu.add("Registrar administrador local",new JPanel());
-        menu.add("Actualizar sede de un administrador local",new JPanel());
-        
-        menu.setSelectedIndex(-1);
-        return menu;
-    }
-        private static JTabbedPane menuTarifasPeriodos(){
-        JTabbedPane menu = new JTabbedPane(JTabbedPane.LEFT);
-        menu.add("Actualizar costo por conductor adicional",new JPanel());
-        menu.add("Actualizar costo por traslado de vehículo",new JPanel());
-        menu.add("Actualizar periodo de temporada alta",new JPanel());
-        menu.add("Actualizar periodo de temporada baja",new JPanel());
-        
-        menu.setSelectedIndex(-1);
-        return menu;
-    }
-    
-        private static void editarSede(JPanel mainPanel){
-        //1. Nombre
-        //2. Ubicacion y portada
-        //3. Horario de Atencion entre semana
-        //4. Horario de atencion fin de semana 
-
-
+        public static void nuevoPanel1Seguros(JPanel panel1){
+            refresh(panel1);
+            GridLayout gridLayout1 = new GridLayout(0, 2);
+            gridLayout1.setVgap(10);
+            panel1.setPreferredSize(new Dimension(0, 400));
+            panel1.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0)); // Establece un FlowLayout sin relleno
+            panel1.add(new JLabel("Ingrese la información del nuevo seguro"));
+            panel1.add(new JLabel(""));
+            panel1.setLayout(gridLayout1);
+            panel1.add(new JLabel("Descripción del seguro:"));
+            PlaceHolderTextField descripcion= new PlaceHolderTextField("Ej: Seguro ante robos");
+            panel1.add(descripcion);
+            panel1.add(new JLabel("Porcentaje de la tarifa diaria a cobrar:"));
+            DefaultComboBoxModel<Double> opciones = new DefaultComboBoxModel<>();
+            for (double i = 0.1; i <= 2.0; i += 0.1) {
+                double numeroRedondeado = Math.round(i * 10.0) / 10.0;
+                opciones.addElement(numeroRedondeado);
+            }
+            JComboBox<Double> pctg = new JComboBox<>(opciones);
+            panel1.add(pctg);
+            panel1.add(Box.createRigidArea(new Dimension(0,150)));
+            panel1.add(Box.createRigidArea(new Dimension(0,150)));
+            JButton avanzar = new JButton("Registrar Seguro");
+            panel1.add(avanzar);
 
         }
-        
-        private static void refrescar(JPanel panel){
+            public static void nuevoPanel2Seguros(JPanel panel2){
+            refresh(panel2);
+            GridLayout gridLayout1 = new GridLayout(0, 2);
+            gridLayout1.setVgap(10);
+            panel2.setPreferredSize(new Dimension(0, 400));
+            panel2.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0)); // Establece un FlowLayout sin relleno
+            panel2.add(new JLabel("Ingrese la información del nuevo seguro"));
+            panel2.add(new JLabel(""));
+            panel2.setLayout(gridLayout1);
+            panel2.add(new JLabel("Descripción del seguro:"));
+            PlaceHolderTextField descripcion= new PlaceHolderTextField("Ej: Seguro ante robos");
+            panel2.add(descripcion);
+            panel2.add(new JLabel("Porcentaje de la tarifa diaria a cobrar:"));
+            DefaultComboBoxModel<Double> opciones = new DefaultComboBoxModel<>();
+            for (double i = 0.1; i <= 2.0; i += 0.1) {
+                double numeroRedondeado = Math.round(i * 10.0) / 10.0;
+                opciones.addElement(numeroRedondeado);
+            }
+            JComboBox<Double> pctg = new JComboBox<>(opciones);
+            panel2.add(pctg);
+
+        }
+            public static void nuevoPanel3Seguros(JPanel panel3){
+            refresh(panel3);
+            GridLayout gridLayout1 = new GridLayout(0, 2);
+            gridLayout1.setVgap(10);
+            panel3.setPreferredSize(new Dimension(0, 400));
+            panel3.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0)); // Establece un FlowLayout sin relleno
+            panel3.add(new JLabel("Ingrese la información del nuevo seguro"));
+            panel3.add(new JLabel(""));
+            panel3.setLayout(gridLayout1);
+            panel3.add(new JLabel("Descripción del seguro:"));
+            PlaceHolderTextField descripcion= new PlaceHolderTextField("Ej: Seguro ante robos");
+            panel3.add(descripcion);
+            panel3.add(new JLabel("Porcentaje de la tarifa diaria a cobrar:"));
+            DefaultComboBoxModel<Double> opciones = new DefaultComboBoxModel<>();
+            for (double i = 0.1; i <= 2.0; i += 0.1) {
+                double numeroRedondeado = Math.round(i * 10.0) / 10.0;
+                opciones.addElement(numeroRedondeado);
+            }
+            JComboBox<Double> pctg = new JComboBox<>(opciones);
+            panel3.add(pctg);
+
+        }
+
+        public static void refresh(JPanel panel){
             panel.removeAll();
             panel.repaint();
-            panel.revalidate();
-            frame.revalidate();
-            frame.repaint();
+            panel.validate();
         }
-
         public static void main(String[] args) {
             VentanaAdmin ventana = new VentanaAdmin();
         }
