@@ -122,10 +122,6 @@ public class VentanaRegistro extends JFrame {
 
         botonContinuar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                System.out.println(campoDocumento.getText());
-                System.out.println(campoNombre.getText());
-                System.out.println(campoCorreo.getText());
-                System.out.println(campoTelefono.getText());
                 tab1 = new JTabbedPane();
                 tab1.addTab("Usuario y Contraseña", new crearUsuario());
                 add(tab1);
