@@ -218,10 +218,30 @@ public class VentanaAdmin {
     }
         private static JTabbedPane menuTarifasPeriodos(){
         JTabbedPane menu = new JTabbedPane(JTabbedPane.LEFT);
-        menu.add("Actualizar costo por conductor adicional",new JPanel());
-        menu.add("Actualizar costo por traslado de vehículo",new JPanel());
-        menu.add("Actualizar periodo de temporada alta",new JPanel());
-        menu.add("Actualizar periodo de temporada baja",new JPanel());
+        JPanel panel1= new JPanel();
+        nuevoPanelTarifas(panel1);
+        menu.add("Actualizar costo por conductor adicional",panel1);
+        JPanel panel2= new JPanel();
+        nuevoPanelTarifas(panel2);
+        menu.add("Actualizar costo por traslado de vehículo",panel2);
+        JPanel panel3= new JPanel();
+        nuevoPanelPeriodos(panel3);
+        menu.add("Actualizar periodo de temporada alta",panel3);
+        JPanel panel4= new JPanel();
+        nuevoPanelPeriodos(panel4);
+        menu.add("Actualizar periodo de temporada baja",panel4);
+        menu.addChangeListener(new ChangeListener() {
+        public void stateChanged(ChangeEvent e) {
+        // Obtener el índice de la pestaña seleccionada
+            int selectedIndex = menu.getSelectedIndex();
+                if (selectedIndex==1){
+                    nuevoPanelTarifas(panel1);
+                }
+                else if (selectedIndex==2){nuevoPanelTarifas(panel2);
+                }
+                else if (selectedIndex==3){nuevoPanelPeriodos(panel3);}
+                else {nuevoPanelPeriodos(panel4);}
+        }});
         
         menu.setSelectedIndex(-1);
         return menu;
@@ -710,20 +730,21 @@ public class VentanaAdmin {
             JButton avanzar= new JButton("Actualizar precio");
             precio.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e) {
-                    boolean esNum=false;
+                    boolean esNum;
                     try {
                         float numero = Float.parseFloat(precio.getText());
                         esNum=true;
                     } catch (NumberFormatException f) {
+                        esNum=false;
                     }
                     avanzar.setVisible(!precio.getText().trim().isEmpty()&& esNum);
                 }});
             avanzar.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e){
-                    
+                    System.out.println(precio);
             }});
         }
-        public static void nuevoPanelPeriodos(){
+        public static void nuevoPanelPeriodos(JPanel panel){
             
         }
         public static void CambioGuardadoDialog() {
