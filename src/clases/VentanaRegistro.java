@@ -61,27 +61,7 @@ public class VentanaRegistro extends JFrame {
         campoTelefono = new PlaceHolderTextField("Ej: 3000000000");
         etiquetaFecha = new JLabel("Fecha de Nacimiento: ");
         
-        listaAnho = new JComboBox<>();
-        int anhoActual = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
-        for (int i = anhoActual; i >= 1900; i--) {
-            listaAnho.addItem(String.valueOf(i));
-        }
-        String[] meses = {"01", "02", "03", "04", "05", "06", "07",
-                         "08", "09", "10", "11", "12"};
-        listaMes = new JComboBox<>(meses);
-        listaDia= new JComboBox<>();
-        actualizarDias();
-        String mesSeleccionado = (String) listaMes.getSelectedItem();
-        if ("02".equals(mesSeleccionado)) {
-            limite = 29;
-        } else if ("04".equals(mesSeleccionado) || "06".equals(mesSeleccionado) 
-                || "09".equals(mesSeleccionado) || "11".equals(mesSeleccionado)) {
-            limite = 30;
-        } else {limite = 31;}
-        listaDia = new JComboBox<>();
-        for (int i = 1; i <= limite; i++) {
-            listaDia.addItem(String.valueOf(i));
-        }
+    
         
         etiquetaNacionalidad = new JLabel("Nacionalidad: ");
         campoNacionalidad = new PlaceHolderTextField("Ej: Colombia");
@@ -97,10 +77,10 @@ public class VentanaRegistro extends JFrame {
         panelDatos.add(etiquetaTelefono);
         panelDatos.add(campoTelefono);
         panelDatos.add(etiquetaFecha);
-        panelFecha.add(listaAnho);
-        panelFecha.add(listaMes);
-        if (listaMes.getSelectedItem() != null) {panelFecha.add(listaDia);}
-        panelDatos.add(panelFecha);
+        //panelFecha.add(listaAnho);
+        //panelFecha.add(listaMes);
+        //panelFecha.add(listaDia);
+        //panelDatos.add(panelFecha);
         panelDatos.add(etiquetaNacionalidad);
         panelDatos.add(campoNacionalidad);
 
@@ -161,12 +141,7 @@ public class VentanaRegistro extends JFrame {
         setSize(500, 600);
         setVisible(true);
     }
-    private void actualizarDias(){
-        listaDia.removeAllItems();
-        for (int i = 1; i <= limite; i++) {
-            listaDia.addItem(String.valueOf(i));
-        }
-    }
+    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new VentanaRegistro());
     }
