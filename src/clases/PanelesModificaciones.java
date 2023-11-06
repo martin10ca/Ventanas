@@ -118,7 +118,7 @@ public class PanelesModificaciones {
         // Crear botones y componentes necesarios
         JButton avanzar = new JButton("Avanzar");
         avanzar.setEnabled(false);
-        DateSelectorPanel dateSelector= new DateSelectorPanel(new JPanel(),2023);
+        DateComboBoxPanel dateSelector= new DateComboBoxPanel(2023);
     
         CompletableFuture<String> result = new CompletableFuture<>();
     
@@ -126,7 +126,7 @@ public class PanelesModificaciones {
         avanzar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String resultado= dateSelector.getSelectedMonth()+dateSelector.getSelectedDay();
+                String resultado= "";
                 System.out.println(resultado);
                 result.complete(resultado); // Obtener la fecha seleccionada
                 panel.setVisible(false); // Oculta el panel después de la selección.
@@ -140,7 +140,7 @@ public class PanelesModificaciones {
         mainPanel.revalidate();
         mainPanel.repaint();
     
-        return dateSelector.getSelectedMonth()+dateSelector.getSelectedDay();
+        return "";
     }
         
     public static void main(String[] args) throws InterruptedException, ExecutionException {

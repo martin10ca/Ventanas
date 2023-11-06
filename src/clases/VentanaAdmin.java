@@ -1,4 +1,5 @@
 package clases;
+import javax.sound.midi.Soundbank;
 import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.Border;
@@ -26,6 +27,20 @@ public class VentanaAdmin {
     JTabbedPane panelInferior;
     static boolean inAction;
     static boolean boolModificar;
+    static JComboBox<String> comboBoxGeneral1Sede;
+    static JComboBox<String> comboBoxGeneral2Sede;
+    static JComboBox<String> comboBoxGeneral3Sede;
+    static JComboBox<String> comboBoxGeneral4Sede;
+    static JComboBox<String> comboBoxGeneral5Sede;
+    static JComboBox<String> comboBoxGeneral1Cate;
+    static JComboBox<String> comboBoxGeneral2Cate;
+    static JComboBox<String> comboBoxGeneral3Cate;
+    static JComboBox<String> comboBoxGeneral4Cate;
+    static JComboBox<String> comboBoxGeneral5Cate;
+    static JComboBox<String> comboBoxGeneral6Cate;
+    static JComboBox<String> comboBoxGeneral7Cate;
+    static JComboBox<String> comboBoxGeneral8Cate;
+    static JComboBox<String> comboBoxGeneral1Seg;
     public VentanaAdmin() {
         this.frame = new JFrame("Menu Administrador");
         this.panelSuperior= setPanelSuperior();
@@ -227,10 +242,10 @@ public class VentanaAdmin {
         nuevoPanelTarifas(panel2);
         menu.add("Actualizar costo por traslado de vehículo",panel2);
         JPanel panel3= new JPanel();
-        //nuevoPanelPeriodos(panel3);
+        nuevoPanelPeriodos(panel3);
         menu.add("Actualizar periodo de temporada alta",panel3);
         JPanel panel4= new JPanel();
-        //nuevoPanelPeriodos(panel4);
+        nuevoPanelPeriodos(panel4);
         menu.add("Actualizar periodo de temporada baja",panel4);
         menu.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent e) {
@@ -241,8 +256,8 @@ public class VentanaAdmin {
                 }
                 else if (selectedIndex==2){nuevoPanelTarifas(panel2);
                 }
-                //else if (selectedIndex==3){nuevoPanelPeriodos(panel3);}
-                //else {nuevoPanelPeriodos(panel4);}
+                else if (selectedIndex==3){nuevoPanelPeriodos(panel3);}
+                else {nuevoPanelPeriodos(panel4);}
         }});
         
         menu.setSelectedIndex(-1);
@@ -429,11 +444,11 @@ public class VentanaAdmin {
         //
         PlaceHolderTextField nomSede= new PlaceHolderTextField("Ej: Sede Bosa");
         PlaceHolderTextField ubiSede= new PlaceHolderTextField("Ej: Cl. 57c Sur #87-21");
-        DefaultComboBoxModel<Integer> opcionesHora1 = new DefaultComboBoxModel<>();
-        DefaultComboBoxModel<Integer> opcionesHora2 = new DefaultComboBoxModel<>();
-        JComboBox<Integer> hora1 = new JComboBox<>();
+        DefaultComboBoxModel<String> opcionesHora1 = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<String> opcionesHora2 = new DefaultComboBoxModel<>();
+        JComboBox<String> hora1 = new JComboBox<>();
         JComboBox<String> min1 = new JComboBox<>();
-        JComboBox<Integer> hora2 = new JComboBox<>();
+        JComboBox<String> hora2 = new JComboBox<>();
         JComboBox<String> min2 = new JComboBox<>();
         //
         GridLayout gridLayout1 = new GridLayout(0, 3);
@@ -452,8 +467,11 @@ public class VentanaAdmin {
         panel1.add(new JLabel(""));
         panel1.add(new JLabel("Horario de apertura entre semana (hh mm):"));
         for (int i = 1; i <= 23; i++) {
-            opcionesHora1.addElement(i);
-            opcionesHora2.addElement(i);
+            String s="";
+            if(i<10){s=s+"0";}
+            s=s+Integer.toString(i);
+            opcionesHora1.addElement(s);
+            opcionesHora2.addElement(s);
 
         }
         String[] opcionesMinutos1 = {"00"};
@@ -461,11 +479,15 @@ public class VentanaAdmin {
 
         hora1 = new JComboBox<>(opcionesHora1);
         min1 = new JComboBox<>(opcionesMinutos1);
+        hora1.setSelectedIndex(0);
+        min1.setSelectedIndex(0);
         panel1.add(hora1);
         panel1.add(min1);
         panel1.add(new JLabel("Horario de apertura para fin de semana (hh mm):"));        
         hora2 = new JComboBox<>(opcionesHora2);
         min2 = new JComboBox<>(opcionesMinutos2);
+        hora2.setSelectedIndex(0);
+        min2.setSelectedIndex(0);
         panel1.add(hora2);
         panel1.add(min2);
         
@@ -473,13 +495,52 @@ public class VentanaAdmin {
         imag.setBackground(Color.WHITE);
 
         Font font = imag.getFont().deriveFont(Font.ITALIC | Font.BOLD);
-
         imag.setFont(font);
         imag.setText("Cargue una foto de la sede aquí");
         panel1.add(imag);
         panel1.add(new JLabel("")); 
         JButton avanzar= new JButton("Registrar Sede");
         panel1.add(avanzar);
+        avanzar.setVisible(false);
+
+        comboBoxGeneral1Sede=hora1;
+        comboBoxGeneral2Sede=min1;
+        comboBoxGeneral3Sede=hora2;
+        comboBoxGeneral4Sede=min2;
+        DocumentListener documentListener = new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                avanzar.setVisible(checkFields1Sede(nomSede, ubiSede, comboBoxGeneral1Sede, comboBoxGeneral2Sede, comboBoxGeneral3Sede, comboBoxGeneral4Sede));
+            }
+    
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                avanzar.setVisible(checkFields1Sede(nomSede, ubiSede, comboBoxGeneral1Sede, comboBoxGeneral2Sede, comboBoxGeneral3Sede, comboBoxGeneral4Sede));
+            }
+    
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                avanzar.setVisible(checkFields1Sede(nomSede, ubiSede, comboBoxGeneral1Sede, comboBoxGeneral2Sede, comboBoxGeneral3Sede, comboBoxGeneral4Sede));
+            }
+        };
+    
+        // Agrega el DocumentListener a los campos de texto
+        nomSede.getDocument().addDocumentListener(documentListener);
+        ubiSede.getDocument().addDocumentListener(documentListener);
+
+        avanzar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                System.out.println(nomSede.getText());
+                System.out.println(ubiSede.getText());
+                System.out.println(comboBoxGeneral1Sede.getSelectedItem());
+                System.out.println(comboBoxGeneral2Sede.getSelectedItem());
+                System.out.println(comboBoxGeneral3Sede.getSelectedItem());
+                System.out.println(comboBoxGeneral4Sede.getSelectedItem());
+                refresh(panel1);
+                CambioGuardadoDialog();
+            }
+        });
 
     }
         public static void nuevoPanel2Sedes(JPanel panel2){
@@ -490,6 +551,7 @@ public class VentanaAdmin {
         panel2.add(new JLabel("Seleccione la sede que desea modificar"));
         String[] listaSedes= {"Sede1","Sede2","Sede3"};
         JComboBox<String> sedes = new JComboBox<>(listaSedes);
+        sedes.setSelectedIndex(0);
         panel2.add(sedes);
 
         JButton avanzar2 = new JButton("Modificar");
@@ -509,7 +571,7 @@ public class VentanaAdmin {
             @Override
             public void changedUpdate(DocumentEvent e) {updateButtonState();}
             private void updateButtonState() {
-                if (sedes.getSelectedItem() != null && !sedes.getSelectedItem().toString().isEmpty()) {
+                if (sedes.getSelectedItem() != null) {
                     avanzar2.setEnabled(true);  // Habilita el botón "avanzar2" si se ha seleccionado una opción o se ha ingresado texto.
                 } else {
                     avanzar2.setEnabled(false); // Deshabilita el botón "avanzar2" si no hay una opción seleccionada o no hay texto ingresado.
@@ -545,7 +607,7 @@ public class VentanaAdmin {
             refresh(panel1);
             //
             PlaceHolderTextField descripcion= new PlaceHolderTextField("Ej: Seguro ante robos");
-            JComboBox<Double> pctg = new JComboBox<>();
+            JComboBox<String> pctg = new JComboBox<>();
             //
             GridLayout gridLayout1 = new GridLayout(0, 2);
             gridLayout1.setVgap(10);
@@ -557,17 +619,45 @@ public class VentanaAdmin {
             panel1.add(new JLabel("Descripción del seguro:"));
             panel1.add(descripcion);
             panel1.add(new JLabel("Porcentaje de la tarifa diaria a cobrar:"));
-            DefaultComboBoxModel<Double> opciones = new DefaultComboBoxModel<>();
+            DefaultComboBoxModel<String> opciones = new DefaultComboBoxModel<>();
             for (double i = 0.1; i <= 2.0; i += 0.1) {
                 double numeroRedondeado = Math.round(i * 10.0) / 10.0;
-                opciones.addElement(numeroRedondeado);
+                opciones.addElement(Double.toString(numeroRedondeado));
             }
             pctg = new JComboBox<>(opciones);
+            comboBoxGeneral1Seg=pctg;
             panel1.add(pctg);
             panel1.add(Box.createRigidArea(new Dimension(0,150)));
             panel1.add(Box.createRigidArea(new Dimension(0,150)));
             JButton avanzar = new JButton("Registrar Seguro");
+            avanzar.setVisible(false);
             panel1.add(avanzar);
+            DocumentListener documentListener = new DocumentListener() {
+                @Override
+                public void insertUpdate(DocumentEvent e) {
+                    avanzar.setVisible(!descripcion.getText().trim().isEmpty());
+                }
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    avanzar.setVisible(!descripcion.getText().trim().isEmpty());
+                }
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    avanzar.setVisible(!descripcion.getText().trim().isEmpty());
+                }
+            };
+            descripcion.getDocument().addDocumentListener(documentListener);
+            avanzar.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    System.out.println("Desc:"+descripcion.getText());
+                    System.out.println(comboBoxGeneral1Seg.getSelectedItem());
+                    CambioGuardadoDialog();
+                    refresh(panel1);
+                }
+            });
+
+         
 
         }
             public static void nuevoPanel2Seguros(JPanel panel2){
@@ -631,17 +721,35 @@ public class VentanaAdmin {
             //TODO opciones
             String[] opciones = {"Seguro1","Seguro2"};
             seguros = new JComboBox<>(opciones);
+            seguros.setSelectedIndex(0);
             panel3.add(seguros);
+            panel3.add(Box.createRigidArea(new Dimension(0,200)));
+            panel3.add(Box.createRigidArea(new Dimension(0,200)));
+            panel3.add(Box.createRigidArea(new Dimension(0,200)));
             JButton avanzar = new JButton("Eliminar Seguro");
-            panel3.add(Box.createRigidArea(new Dimension(0,200)));
-            panel3.add(Box.createRigidArea(new Dimension(0,200)));
-            panel3.add(Box.createRigidArea(new Dimension(0,200)));
+            avanzar.setVisible(false);
             panel3.add(avanzar);
+            comboBoxGeneral5Sede= seguros;
+            seguros.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    boolean showButton = !comboBoxGeneral5Sede.getSelectedItem().equals(null);
+                    avanzar.setVisible(showButton);
+                }
+            });
+            
             avanzar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                refresh(panel3);
-            }});
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String selectedOption = comboBoxGeneral5Sede.getSelectedItem().toString().trim();
+                    //TODO
+                    System.out.println("opcion: >"+selectedOption);
+                    CambioGuardadoDialog();
+                    refresh(panel3);
+                
+                }
+            });
+
         }
 
 
@@ -680,13 +788,14 @@ public class VentanaAdmin {
                         login.setEditable(false);
                         panel1.add(new JLabel("Complete el registro del usuario"));
                         panel1.add(new JLabel(""));
-                        panel1.add(new JLabel("Password"));
-                        panel1.add(password);
+
                         panel1.add(new JLabel("Sede que administrará"));
                         // TODO
                         String[] opciones = {"Sede1", "Sede2"};
                         JComboBox<String> sedes = new JComboBox<>(opciones);
                         panel1.add(sedes);
+                        panel1.add(new JLabel("Password"));
+                        panel1.add(password);
                         JButton avanzar2 = new JButton("Agregar administrador local");
                         panel1.add(avanzar2);
                         avanzar2.setVisible(false);
@@ -742,14 +851,15 @@ public class VentanaAdmin {
                         panel2.add(new JLabel("Complete la actualización del usuario"));
                         panel2.add(new JLabel(""));
 
-                        panel2.add(new JLabel("Password"));
-                        PlaceHolderTextField password = new PlaceHolderTextField("acosta123");
-                        panel2.add(password);
+
                         panel2.add(new JLabel("Sede que administrará"));
                         // TODO
                         String[] opciones = {"Sede1", "Sede2"};
                         JComboBox<String> sedes = new JComboBox<>(opciones);
                         panel2.add(sedes);
+                        panel2.add(new JLabel("Password"));
+                        PlaceHolderTextField password = new PlaceHolderTextField("acosta123");
+                        panel2.add(password);
                         JButton avanzar2 = new JButton("Actualizar administrador local");
                         panel2.add(avanzar2);
                         avanzar2.setVisible(false);
@@ -809,32 +919,31 @@ public class VentanaAdmin {
                 //
                 String periodo="";
                 //
-                panel.setLayout(new GridLayout(0, 2));
+                panel.setLayout(new GridLayout(0, 1));
                 panel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 80));
                 JLabel label = new JLabel("Nuevo Periodo ");
+                panel.add(label);
+
+                DateComboBoxPanel date= new DateComboBoxPanel(Calendar.getInstance().get(Calendar.YEAR+1));
+                panel.add(date);
+                panel.add(Box.createRigidArea(new Dimension(0, 100)));
+                panel.add(Box.createRigidArea(new Dimension(0, 100)));
                 JButton actualizar = new JButton("Actualizar periodo");  
                 actualizar.setSize(new Dimension(100,50));
-                DateSelectorPanel panelPeriodo= new DateSelectorPanel(panel,Calendar.getInstance().get(Calendar.YEAR+1));
-                panel.add(label);
-                panel.add(Box.createRigidArea(new Dimension(0, 100)));
-                panel.add(Box.createRigidArea(new Dimension(0, 100)));
                 panel.add(actualizar);
-                    
-                actualizar.setVisible(false);
-                periodo=panelPeriodo.getSelectedMonth()+panelPeriodo.getSelectedDay();               
-                actualizar.addActionListener(new ActionListener() {
+            
+
+                actualizar.addActionListener(new ActionListener() {  
+                @Override
                 public void actionPerformed(ActionEvent e) {
-                    actualizar.setVisible(!panelPeriodo.getSelectedMonth().trim().isEmpty());
-                }
-                });
-                
-                actualizar.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Precio actualizado: " + panelPeriodo.getSelectedMonth()+panelPeriodo.getSelectedDay());
+                    String text = date.getText();
+                    System.out.println(text);
+                    // TODO: Realizar acciones al presionar "avanzar"
                     CambioGuardadoDialog();
                     refresh(panel);
                 }
-            });
+                });
+
             
         }
         public static void CambioGuardadoDialog() {
@@ -855,6 +964,20 @@ public class VentanaAdmin {
     
             dialog.add(okButton);
             dialog.setVisible(true);
+        }
+
+        private static boolean checkFields1Sede(PlaceHolderTextField nomSede,PlaceHolderTextField  ubiSede, JComboBox<String> hora1,JComboBox<String> min1,JComboBox<String> hora2,JComboBox<String> min2) {
+            // Verificar si todos los campos están llenos
+            String nomSedeText = nomSede.getText().trim();
+            String ubiSedeText = ubiSede.getText().trim();
+            boolean hora1Selected = hora1.getSelectedItem() != null;
+            boolean min1Selected = min1.getSelectedItem() != null;
+            boolean hora2Selected = hora2.getSelectedItem() != null;
+            boolean min2Selected = min2.getSelectedItem() != null;
+        
+            // Habilitar o deshabilitar el botón según el estado de los campos
+            return (!nomSedeText.isEmpty() && !ubiSedeText.isEmpty() &&
+                hora1Selected && min1Selected && hora2Selected && min2Selected);
         }
         public static void refresh(JPanel panel){
             panel.removeAll();
