@@ -6,6 +6,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentListener;
 
 public class PanelesModificaciones {
     private static boolean booleanEleccion;
@@ -106,7 +107,42 @@ public class PanelesModificaciones {
             mainPanel.repaint();
 
             return result.get();
-        }
+    }
+
+    public String modificacionMMDD(JPanel mainPanel, String nom) {
+        JPanel panel = new JPanel();
+        panel.setBounds(0, 0, 0, 0);
+        panel.add(new JLabel("Después de seleccionar la fecha, presione Enter."));
+        panel.add(new JLabel("\n"));
+    
+        // Crear botones y componentes necesarios
+        JButton avanzar = new JButton("Avanzar");
+        avanzar.setEnabled(false);
+        DateSelectorPanel dateSelector= new DateSelectorPanel(new JPanel(),2023);
+    
+        CompletableFuture<String> result = new CompletableFuture<>();
+    
+        // Evento para el botón "Avanzar"
+        avanzar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String resultado= dateSelector.getSelectedMonth()+dateSelector.getSelectedDay();
+                System.out.println(resultado);
+                result.complete(resultado); // Obtener la fecha seleccionada
+                panel.setVisible(false); // Oculta el panel después de la selección.
+            }
+        });
+    
+        panel.add(new JLabel(nom));
+        panel.add(dateSelector); // Agregar el componente DateSelectorPanel
+        panel.add(avanzar);
+        mainPanel.add(panel);
+        mainPanel.revalidate();
+        mainPanel.repaint();
+    
+        return dateSelector.getSelectedMonth()+dateSelector.getSelectedDay();
+    }
+        
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         // Tu código va aquí
         JFrame frame = new JFrame();

@@ -1,5 +1,6 @@
 package clases;
 import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.event.ChangeEvent;
@@ -14,6 +15,7 @@ import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.font.TextAttribute;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -225,10 +227,10 @@ public class VentanaAdmin {
         nuevoPanelTarifas(panel2);
         menu.add("Actualizar costo por traslado de vehículo",panel2);
         JPanel panel3= new JPanel();
-        nuevoPanelPeriodos(panel3);
+        //nuevoPanelPeriodos(panel3);
         menu.add("Actualizar periodo de temporada alta",panel3);
         JPanel panel4= new JPanel();
-        nuevoPanelPeriodos(panel4);
+        //nuevoPanelPeriodos(panel4);
         menu.add("Actualizar periodo de temporada baja",panel4);
         menu.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent e) {
@@ -239,8 +241,8 @@ public class VentanaAdmin {
                 }
                 else if (selectedIndex==2){nuevoPanelTarifas(panel2);
                 }
-                else if (selectedIndex==3){nuevoPanelPeriodos(panel3);}
-                else {nuevoPanelPeriodos(panel4);}
+                //else if (selectedIndex==3){nuevoPanelPeriodos(panel3);}
+                //else {nuevoPanelPeriodos(panel4);}
         }});
         
         menu.setSelectedIndex(-1);
@@ -248,6 +250,15 @@ public class VentanaAdmin {
     }
         private static void nuevoPanel1Vehiculo(JPanel panel1){
         refresh(panel1);
+        //
+        PlaceHolderTextField placa=new PlaceHolderTextField("Ej: ABC123");
+        PlaceHolderTextField marca= new PlaceHolderTextField("Ej: Chevrolet");
+        PlaceHolderTextField modelo = new PlaceHolderTextField("Ej: Aveo");
+        PlaceHolderTextField color= new PlaceHolderTextField("Ej: Azul");
+        ButtonGroup opcionTransmision= new ButtonGroup();
+        JComboBox categorias= new JComboBox<>();
+        JComboBox sedes= new JComboBox<String>();
+        //
         panel1.setPreferredSize(new Dimension(0, 400));
         panel1.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0)); // Establece un FlowLayout sin relleno
         GridLayout gridLayout1 = new GridLayout(0, 2);
@@ -256,20 +267,15 @@ public class VentanaAdmin {
         panel1.add(new JLabel(""));
         panel1.setLayout(gridLayout1);
         panel1.add(new JLabel("Placa:"));
-        PlaceHolderTextField placa=new PlaceHolderTextField("Ej: ABC123");
         panel1.add(placa);
-        PlaceHolderTextField marca= new PlaceHolderTextField("Ej: Chevrolet");
         panel1.add(new JLabel("Marca:"));
         panel1.add(marca);
         panel1.add(new JLabel("Modelo:"));
-        PlaceHolderTextField modelo = new PlaceHolderTextField("Ej: Aveo");
         panel1.add(modelo);
         panel1.add(new JLabel("Color:"));
-        PlaceHolderTextField color= new PlaceHolderTextField("Ej: Azul");
         panel1.add(color);
         panel1.add(new JLabel("Transmisión:"));
         panel1.add(new JLabel(""));
-        ButtonGroup opcionTransmision= new ButtonGroup();
         JRadioButton manual=new JRadioButton("Manual");
         JRadioButton automatica= new JRadioButton("Automática");
         opcionTransmision.add(manual);
@@ -279,14 +285,15 @@ public class VentanaAdmin {
         panel1.add(new JLabel("Categoria:"));
         //TODO con un for añadir categorias
         String[] opcionesCategorias= {"Categoria1","Categoria2"};
-        JComboBox categorias= new JComboBox<>(opcionesCategorias);
+        categorias= new JComboBox<>(opcionesCategorias);
         categorias.setPreferredSize(new Dimension(100, 20)); 
         categorias.setSelectedItem(-1);
         panel1.add(categorias);
         panel1.add(new JLabel("Sedes:"));
         //TODO con un for añadir sedes
         String[] opcionesSedes= {"Sede1","Sede2"};
-        JComboBox sedes= new JComboBox<String>(opcionesSedes);
+        sedes= new JComboBox<String>(opcionesSedes);
+
         sedes.setPreferredSize(new Dimension(20, 20)); 
         sedes.setSelectedItem(-1);
         panel1.add(sedes);
@@ -295,6 +302,9 @@ public class VentanaAdmin {
     }
         private static void nuevoPanel2Vehiculo(JPanel panel2){
         refresh(panel2);
+        //
+        PlaceHolderTextField placa=new PlaceHolderTextField("Placa");
+        //
         panel2.setLayout(new BoxLayout(panel2, BoxLayout.Y_AXIS));
             //Busqueda Carro
         JPanel panel2a= new JPanel();
@@ -302,7 +312,6 @@ public class VentanaAdmin {
         panel2a.setLayout(new BoxLayout(panel2a, BoxLayout.Y_AXIS));
         panel2a.add(new JLabel("Ingrese la placa del vehículo que desea monitorear/actualizar"));
         panel2a.add(new JLabel("\n"));
-        PlaceHolderTextField placa=new PlaceHolderTextField("Placa");
         placa.setPreferredSize(new Dimension(30, 20)); // Establece el tamaño preferido a 200x30 píxeles
         panel2a.add(placa);
         panel2a.add(new JLabel("\n"));
@@ -354,6 +363,17 @@ public class VentanaAdmin {
 
         private static void nuevoPanel1Categorias(JPanel panel1){
         refresh(panel1);
+        //
+        PlaceHolderTextField tipoVehiculo= new PlaceHolderTextField("Ej: PickUp");
+        JComboBox<Integer> capacidad = new JComboBox<>();
+        JComboBox<Double> temp1 = new JComboBox<>();
+        JComboBox<Double> temp2 = new JComboBox<>();
+        NumericOnlyTextField costoLeve= new NumericOnlyTextField();
+        NumericOnlyTextField costoModerado= new NumericOnlyTextField();
+        NumericOnlyTextField costoGrave= new NumericOnlyTextField();
+        NumericOnlyTextField tarifa= new NumericOnlyTextField();
+        JComboBox categorias= new JComboBox<>();
+        //
         panel1.setPreferredSize(new Dimension(0, 400));
         panel1.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0)); // Establece un FlowLayout sin relleno
         GridLayout gridLayout1 = new GridLayout(0, 2);
@@ -362,7 +382,7 @@ public class VentanaAdmin {
         panel1.add(new JLabel(""));
         panel1.setLayout(gridLayout1);
         panel1.add(new JLabel("Tipo de vehículo:"));
-        panel1.add(new PlaceHolderTextField("Ej: PickUp"));
+        panel1.add(tipoVehiculo);
         panel1.add(new JLabel("Nivel de lujo del vehículo:"));
         String[] opcionesLujo = {"Premium", "Intermedio", "Económico"};
         JComboBox<String> nivelesLujo = new JComboBox<>(opcionesLujo);
@@ -372,30 +392,32 @@ public class VentanaAdmin {
         for (int i = 1; i <= 20; i++) {
             opcionesCapacidad.addElement(i);
         }
-        JComboBox<Integer> capacidad = new JComboBox<>(opcionesCapacidad);
+        capacidad = new JComboBox<>(opcionesCapacidad);
         panel1.add(capacidad);
         panel1.add(new JLabel("% a pagar por Temporada Alta:"));
         DefaultComboBoxModel<Double> opcionesTemp1 = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<Double> opcionesTemp2 = new DefaultComboBoxModel<>();
         for (double i = 0.1; i <= 2.1; i += 0.1) {
             double numeroRedondeado = (double) Math.round(i * Math.pow(10, 1)) / Math.pow(10, 1);
             opcionesTemp1.addElement(numeroRedondeado);
+            opcionesTemp2.addElement(numeroRedondeado);
+
         }
-        JComboBox<Double> temp1 = new JComboBox<>(opcionesTemp1);
+        temp1 = new JComboBox<>(opcionesTemp1);
         panel1.add(temp1);
         panel1.add(new JLabel("% a pagar por Temporada Baja:"));
-        JComboBox<Double> temp2 = new JComboBox<>(opcionesTemp1);
+        temp2 = new JComboBox<>(opcionesTemp2);
         panel1.add(temp2);
         panel1.add(new JLabel("Costo por avería leve (COP):"));
-        panel1.add(new PlaceHolderTextField("Ej: 100000"));
+        panel1.add(costoLeve);
         panel1.add(new JLabel("Costo por avería moderada:"));
-        panel1.add(new PlaceHolderTextField("Ej: 200000"));
+        panel1.add(costoModerado);
         panel1.add(new JLabel("Costo por avería total:"));
-        panel1.add(new PlaceHolderTextField("Ej: 1000000"));
+        panel1.add(costoGrave);
         panel1.add(new JLabel("Tarifa diaria:"));
-        panel1.add(new PlaceHolderTextField("Ej: 150000"));
+        panel1.add(tarifa);
         panel1.add(new JLabel("Categoria superior:"));
-        JComboBox categorias= new JComboBox<>();
-        categorias.add(new JButton("Opcion 1"));
+        //TODO
         categorias.setPreferredSize(new Dimension(100, 20)); 
         categorias.setSelectedItem(-1);
         panel1.add(categorias);
@@ -404,6 +426,16 @@ public class VentanaAdmin {
     }
         private static void nuevoPanel1Sedes(JPanel panel1){
         refresh(panel1);
+        //
+        PlaceHolderTextField nomSede= new PlaceHolderTextField("Ej: Sede Bosa");
+        PlaceHolderTextField ubiSede= new PlaceHolderTextField("Ej: Cl. 57c Sur #87-21");
+        DefaultComboBoxModel<Integer> opcionesHora1 = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<Integer> opcionesHora2 = new DefaultComboBoxModel<>();
+        JComboBox<Integer> hora1 = new JComboBox<>();
+        JComboBox<String> min1 = new JComboBox<>();
+        JComboBox<Integer> hora2 = new JComboBox<>();
+        JComboBox<String> min2 = new JComboBox<>();
+        //
         GridLayout gridLayout1 = new GridLayout(0, 3);
         gridLayout1.setVgap(10);
         panel1.setPreferredSize(new Dimension(0, 400));
@@ -413,27 +445,27 @@ public class VentanaAdmin {
         panel1.add(new JLabel(""));
         panel1.setLayout(gridLayout1);
         panel1.add(new JLabel("Nombre de la sede:"));
-        panel1.add(new PlaceHolderTextField("Ej: Sede Bosa"));
+        panel1.add(nomSede);
         panel1.add(new JLabel(""));
-        panel1.add(new JLabel("Ubicacion de la sede:"));
-        panel1.add(new PlaceHolderTextField("Ej: Cl. 57c Sur #87-21"));
+        panel1.add(new JLabel("Ubicación de la sede:"));
+        panel1.add(ubiSede);
         panel1.add(new JLabel(""));
         panel1.add(new JLabel("Horario de apertura entre semana (hh mm):"));
-        DefaultComboBoxModel<Integer> opcionesHora1 = new DefaultComboBoxModel<>();
-        DefaultComboBoxModel<Integer> opcionesHora2 = new DefaultComboBoxModel<>();
         for (int i = 1; i <= 23; i++) {
             opcionesHora1.addElement(i);
             opcionesHora2.addElement(i);
 
         }
-        String[] opcionesMinutos = {"00"};
-        JComboBox<Integer> hora1 = new JComboBox<>(opcionesHora1);
-        JComboBox<String> min1 = new JComboBox<>(opcionesMinutos);
+        String[] opcionesMinutos1 = {"00"};
+        String[] opcionesMinutos2 = {"00"};
+
+        hora1 = new JComboBox<>(opcionesHora1);
+        min1 = new JComboBox<>(opcionesMinutos1);
         panel1.add(hora1);
         panel1.add(min1);
         panel1.add(new JLabel("Horario de apertura para fin de semana (hh mm):"));        
-        JComboBox<Integer> hora2 = new JComboBox<>(opcionesHora2);
-        JComboBox<String> min2 = new JComboBox<>(opcionesMinutos);
+        hora2 = new JComboBox<>(opcionesHora2);
+        min2 = new JComboBox<>(opcionesMinutos2);
         panel1.add(hora2);
         panel1.add(min2);
         
@@ -511,6 +543,10 @@ public class VentanaAdmin {
     }
         public static void nuevoPanel1Seguros(JPanel panel1){
             refresh(panel1);
+            //
+            PlaceHolderTextField descripcion= new PlaceHolderTextField("Ej: Seguro ante robos");
+            JComboBox<Double> pctg = new JComboBox<>();
+            //
             GridLayout gridLayout1 = new GridLayout(0, 2);
             gridLayout1.setVgap(10);
             panel1.setPreferredSize(new Dimension(0, 400));
@@ -519,7 +555,6 @@ public class VentanaAdmin {
             panel1.add(new JLabel(""));
             panel1.setLayout(gridLayout1);
             panel1.add(new JLabel("Descripción del seguro:"));
-            PlaceHolderTextField descripcion= new PlaceHolderTextField("Ej: Seguro ante robos");
             panel1.add(descripcion);
             panel1.add(new JLabel("Porcentaje de la tarifa diaria a cobrar:"));
             DefaultComboBoxModel<Double> opciones = new DefaultComboBoxModel<>();
@@ -527,7 +562,7 @@ public class VentanaAdmin {
                 double numeroRedondeado = Math.round(i * 10.0) / 10.0;
                 opciones.addElement(numeroRedondeado);
             }
-            JComboBox<Double> pctg = new JComboBox<>(opciones);
+            pctg = new JComboBox<>(opciones);
             panel1.add(pctg);
             panel1.add(Box.createRigidArea(new Dimension(0,150)));
             panel1.add(Box.createRigidArea(new Dimension(0,150)));
@@ -582,6 +617,10 @@ public class VentanaAdmin {
         }
             public static void nuevoPanel3Seguros(JPanel panel3){
             refresh(panel3);
+            //
+            JComboBox<String> seguros = new JComboBox<>();
+
+            //
             GridLayout gridLayout1 = new GridLayout(0, 2);
             gridLayout1.setVgap(10);
             panel3.setPreferredSize(new Dimension(0, 400));
@@ -591,7 +630,7 @@ public class VentanaAdmin {
             panel3.setLayout(gridLayout1);
             //TODO opciones
             String[] opciones = {"Seguro1","Seguro2"};
-            JComboBox<String> seguros = new JComboBox<>(opciones);
+            seguros = new JComboBox<>(opciones);
             panel3.add(seguros);
             JButton avanzar = new JButton("Eliminar Seguro");
             panel3.add(Box.createRigidArea(new Dimension(0,200)));
@@ -609,6 +648,11 @@ public class VentanaAdmin {
 
             public static void nuevoPanel1Personal(JPanel panel1){
             refresh(panel1);
+            //
+            PlaceHolderTextField login= new PlaceHolderTextField("Ej: m.acosta");
+            PlaceHolderTextField password = new PlaceHolderTextField("acosta123");
+            //FALTA SEDES
+            //
             GridLayout gridLayout1 = new GridLayout(0, 2);
             gridLayout1.setVgap(10);
             panel1.setPreferredSize(new Dimension(0, 400));
@@ -617,7 +661,6 @@ public class VentanaAdmin {
             panel1.add(new JLabel(""));
             panel1.setLayout(gridLayout1);
             panel1.add(new JLabel("Login"));
-            PlaceHolderTextField login= new PlaceHolderTextField("Ej: m.acosta");
             panel1.add(login);
             JButton avanzar = new JButton("Siguiente");
             panel1.add(Box.createRigidArea(new Dimension(0,200)));
@@ -638,7 +681,6 @@ public class VentanaAdmin {
                         panel1.add(new JLabel("Complete el registro del usuario"));
                         panel1.add(new JLabel(""));
                         panel1.add(new JLabel("Password"));
-                        PlaceHolderTextField password = new PlaceHolderTextField("acosta123");
                         panel1.add(password);
                         panel1.add(new JLabel("Sede que administrará"));
                         // TODO
@@ -658,6 +700,7 @@ public class VentanaAdmin {
                                 System.out.println("login:"+login.getText());
                                 System.out.println("Opcion sede:"+sedes.getSelectedItem().toString());
                                 System.out.println(("password:"+password.getText()));
+
                                 CambioGuardadoDialog();
                                 refresh(panel1);
                             }
@@ -666,6 +709,11 @@ public class VentanaAdmin {
                         
         public static void nuevoPanel2Personal(JPanel panel2){
             refresh(panel2);
+            //
+            PlaceHolderTextField login= new PlaceHolderTextField("Ej: m.acosta");
+            //FALTA PASSWORD
+            //FALTA SEDE
+            //
             GridLayout gridLayout1 = new GridLayout(0, 2);
             gridLayout1.setVgap(10);
             panel2.setPreferredSize(new Dimension(0, 400));
@@ -674,7 +722,6 @@ public class VentanaAdmin {
             panel2.add(new JLabel(""));
             panel2.setLayout(gridLayout1);
             panel2.add(new JLabel("Login"));
-            PlaceHolderTextField login= new PlaceHolderTextField("Ej: m.acosta");
             panel2.add(login);
             JButton avanzar = new JButton("Siguiente");
             panel2.add(Box.createRigidArea(new Dimension(0,200)));
@@ -722,29 +769,72 @@ public class VentanaAdmin {
                         }); 
                     }}});}
 
-        public static void nuevoPanelTarifas(JPanel panel){
-            panel.setLayout(new GridLayout(0, 2));
-            panel.add(new JLabel("Nuevo Precio:"));
-            PlaceHolderTextField precio= new PlaceHolderTextField("Ej: 30000");
-            panel.add(precio);
-            JButton avanzar= new JButton("Actualizar precio");
-            precio.addActionListener(new ActionListener(){
+            public static void nuevoPanelTarifas(JPanel panel) {
+                refresh(panel);
+                //
+                NumericOnlyTextField precio = new NumericOnlyTextField();
+                //
+                panel.setLayout(new GridLayout(0, 2));
+                panel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 80));
+                JLabel label = new JLabel("Nuevo Precio (COP) ");
+                precio.setSize(new Dimension(100,50));
+                JButton actualizarPrecio = new JButton("Actualizar precio");  
+                actualizarPrecio.setSize(new Dimension(100,50));
+                    
+                panel.add(label);
+                panel.add(precio);
+                panel.add(Box.createRigidArea(new Dimension(0, 100)));
+                panel.add(Box.createRigidArea(new Dimension(0, 100)));
+                panel.add(actualizarPrecio);
+                    
+                actualizarPrecio.setVisible(false);
+                
+                precio.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    boolean esNum;
-                    try {
-                        float numero = Float.parseFloat(precio.getText());
-                        esNum=true;
-                    } catch (NumberFormatException f) {
-                        esNum=false;
-                    }
-                    avanzar.setVisible(!precio.getText().trim().isEmpty()&& esNum);
-                }});
-            avanzar.addActionListener(new ActionListener(){
-                public void actionPerformed(ActionEvent e){
-                    System.out.println(precio);
-            }});
-        }
+                    actualizarPrecio.setVisible(!precio.getText().trim().isEmpty());
+                }
+                });
+                
+            actualizarPrecio.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("Precio actualizado: " + precio.getText());
+                    CambioGuardadoDialog();
+                    refresh(panel);
+                }
+            });
+         }
+                    
         public static void nuevoPanelPeriodos(JPanel panel){
+                refresh(panel);
+                //
+                String periodo="";
+                //
+                panel.setLayout(new GridLayout(0, 2));
+                panel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 80));
+                JLabel label = new JLabel("Nuevo Periodo ");
+                JButton actualizar = new JButton("Actualizar periodo");  
+                actualizar.setSize(new Dimension(100,50));
+                DateSelectorPanel panelPeriodo= new DateSelectorPanel(panel,Calendar.getInstance().get(Calendar.YEAR+1));
+                panel.add(label);
+                panel.add(Box.createRigidArea(new Dimension(0, 100)));
+                panel.add(Box.createRigidArea(new Dimension(0, 100)));
+                panel.add(actualizar);
+                    
+                actualizar.setVisible(false);
+                periodo=panelPeriodo.getSelectedMonth()+panelPeriodo.getSelectedDay();               
+                actualizar.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    actualizar.setVisible(!panelPeriodo.getSelectedMonth().trim().isEmpty());
+                }
+                });
+                
+                actualizar.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("Precio actualizado: " + panelPeriodo.getSelectedMonth()+panelPeriodo.getSelectedDay());
+                    CambioGuardadoDialog();
+                    refresh(panel);
+                }
+            });
             
         }
         public static void CambioGuardadoDialog() {

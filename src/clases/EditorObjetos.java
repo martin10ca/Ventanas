@@ -12,6 +12,7 @@ public class EditorObjetos {
     private  JPanel cardPanel;
     private  String[] pasos;
     private int pasoActual = 0;
+    private String retorno;
 
     public void editorSede(JPanel mainPanel) {
         this.mainPanel = mainPanel;
@@ -106,7 +107,6 @@ public class EditorObjetos {
                 avanzarAlSiguientePaso(siguientePasoKey);
             }
         });
-
         cardPanel.add(panel, pasoKey);
     }
     private void crearPasoHora(String pasoKey, String nombreCampo, String siguientePasoKey) {

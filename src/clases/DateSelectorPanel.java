@@ -6,10 +6,12 @@ import java.awt.event.ActionListener;
 import java.util.Calendar;
 
 public class DateSelectorPanel extends JPanel {
-    private JComboBox<Integer> monthComboBox;
-    private JComboBox<Integer> dayComboBox;
+    protected JComboBox<Integer> monthComboBox;
+    protected JComboBox<Integer> dayComboBox;
 
-    public DateSelectorPanel() {
+    private boolean isMonthSelected = false;
+
+    public DateSelectorPanel(JPanel mainPanel,int startYear) {
         setLayout(new FlowLayout(FlowLayout.LEFT));
         JLabel monthLabel = new JLabel("Mes:");
         monthComboBox = new JComboBox<>();
@@ -17,12 +19,22 @@ public class DateSelectorPanel extends JPanel {
         dayComboBox = new JComboBox<>();
 
         populateMonthComboBox();
-        populateDayComboBox();
+
+        if (monthComboBox.getItemCount() > 0) {
+            monthComboBox.setSelectedIndex(0);
+        }
 
         monthComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                populateDayComboBox();
+                if (!isMonthSelected) {
+                    isMonthSelected = true;
+                } else {
+                    populateDayComboBox();
+                    if (dayComboBox.getItemCount() > 0) {
+                        dayComboBox.setSelectedIndex(0);
+                    }
+                }
             }
         });
 
@@ -30,6 +42,9 @@ public class DateSelectorPanel extends JPanel {
         add(monthComboBox);
         add(dayLabel);
         add(dayComboBox);
+        this.setVisible(true);
+        mainPanel.add(this);
+
     }
 
     private void populateMonthComboBox() {
@@ -62,23 +77,21 @@ public class DateSelectorPanel extends JPanel {
             maxDay = 31; // All other months: 31 days
         }
         return maxDay;
+    
+    }
+    public String getSelectedMonth() {
+        String retorno="";
+        if ((int)monthComboBox.getSelectedItem()<10){
+            retorno=retorno+"0";
+        }
+        return retorno+ Integer.toString((int)monthComboBox.getSelectedItem());
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("Date Selector Panel");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(300, 150);
-
-            DateSelectorPanel dateSelectorPanel = new DateSelectorPanel();
-            frame.add(dateSelectorPanel);
-
-            frame.setVisible(true);
-        });
+    public String getSelectedDay() {
+        String retorno="";
+        if ((int)dayComboBox.getSelectedItem()<10){
+            retorno=retorno+"0";
+        }
+        return retorno+ Integer.toString((int)dayComboBox.getSelectedItem());
     }
 }
-
-
-
-
-
