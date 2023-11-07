@@ -1,5 +1,8 @@
 package clases;
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -43,10 +46,10 @@ public class EditorObjetos {
         crearPasoInput("InputNombre", "Nombre", "PreguntaUbicacion");
         crearPasoPregunta("PreguntaUbicacion", "¿Desea modificar la Ubicación?", "InputUbicacion", "PreguntaHora1");
         crearPasoInput("InputUbicacion", "Ubicación", "PreguntaHora1");
-        crearPasoPregunta("PreguntaHora1", "Horario entre semana", "InputHora1", "PreguntaHora2");
-        crearPasoHora("InputHora1", "Horario entre semana(hhmm)", "PreguntaHora2");
-        crearPasoPregunta("PreguntaHora2", "Horario para fin de semana", "InputHora2", "Fin");
-        crearPasoHora("InputHora2", "Horario para fin de semana (hhmm)", "Fin");
+        crearPasoPregunta("PreguntaHora1", "¿Desea modificar el horario entre semana?", "InputHora1", "PreguntaHora2");
+        crearPasoHorario("InputHora1", "Horario entre semana(hhmm)", "PreguntaHora2");
+        crearPasoPregunta("PreguntaHora2", "¿Desea modificar el horario para fin de semana?", "InputHora2", "Fin");
+        crearPasoHorario("InputHora2", "Horario para fin de semana (hhmm)", "Fin");
         crearPasoFin("Fin");
     }
     private void crearPasosSeguro() {
@@ -90,14 +93,29 @@ public class EditorObjetos {
         JPanel panel = new JPanel();
         JLabel label = new JLabel("Nuevo " + nombreCampo + ":");
         JTextField textField = new JTextField(20);
-        JButton avanzarButton = new JButton("Avanzar");
+        JButton avanzar = new JButton("Avanzar");
 
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
         panel.add(label);
         panel.add(textField);
-        panel.add(avanzarButton);
-
-        avanzarButton.addActionListener(new ActionListener() {
+        panel.add(avanzar);
+        avanzar.setVisible(false);
+        DocumentListener documentListener = new DocumentListener() {
+        @Override
+            public void insertUpdate(DocumentEvent e) {
+                avanzar.setVisible(!textField.getText().trim().isEmpty());
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                avanzar.setVisible(!textField.getText().trim().isEmpty());
+            }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                avanzar.setVisible(!textField.getText().trim().isEmpty());
+            }
+        };
+        textField.getDocument().addDocumentListener(documentListener);
+        avanzar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Realiza la operación correspondiente con el nuevo valor
@@ -109,62 +127,77 @@ public class EditorObjetos {
         });
         cardPanel.add(panel, pasoKey);
     }
-    private void crearPasoHora(String pasoKey, String nombreCampo, String siguientePasoKey) {
+    private void crearPasoHorario(String pasoKey, String nombreCampo, String siguientePasoKey) {
         JPanel panel = new JPanel();
         JLabel label = new JLabel("Nuevo " + nombreCampo + ":");
-        JPanel horaPanel = new JPanel();
-    
-        DefaultComboBoxModel<Integer> opcionesHora = new DefaultComboBoxModel<>();
+        JLabel labela = new JLabel("\t");
+
+        JLabel label1 = new JLabel("Hora inicio ");
+        JLabel label2 = new JLabel("Hora fin ");
+        JPanel horaPanel1 = new JPanel();
+        JPanel horaPanel2 = new JPanel();
+
+        DefaultComboBoxModel<String> opcionesHora1 = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<String> opcionesHora2 = new DefaultComboBoxModel<>();
+
         for (int i = 0; i <= 23; i++) {
-            opcionesHora.addElement(i);
+            String s="";
+            if (i<10){
+                s=s+"0";
+            }
+            opcionesHora1.addElement(s+Integer.toString(i));
+            opcionesHora2.addElement(s+Integer.toString(i));
         }
-        JComboBox<Integer> horaComboBox = new JComboBox<>(opcionesHora);
+        JComboBox<String> horaComboBox1 = new JComboBox<>(opcionesHora1);
+        JComboBox<String> horaComboBox2 = new JComboBox<>(opcionesHora2);
     
-        String[] opcionesMinutos = {"00"};
-        JComboBox<String> minutosComboBox = new JComboBox<>(opcionesMinutos);
-    
+        DefaultComboBoxModel<String> opcionesMinutos1 = new DefaultComboBoxModel<>();
+        opcionesMinutos1.addElement("00");
+        DefaultComboBoxModel<String> opcionesMinutos2 = new DefaultComboBoxModel<>();
+        opcionesMinutos2.addElement("00");
+
+        JComboBox<String> minutosComboBox1 = new JComboBox<>(opcionesMinutos1);
+        JComboBox<String> minutosComboBox2 = new JComboBox<>(opcionesMinutos2);
+        opcionesHora1.setSelectedItem("01");
+        opcionesHora2.setSelectedItem("01");
+        opcionesMinutos1.setSelectedItem("00");
+        opcionesMinutos2.setSelectedItem("00");
+
         JButton avanzarButton = new JButton("Avanzar");
-        avanzarButton.setEnabled(false); // Inicialmente, deshabilitar el botón "Avanzar"
     
-        // Agregar ItemListener para habilitar el botón cuando se seleccionen ambos valores
-        horaComboBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (horaComboBox.getSelectedIndex() != -1 && minutosComboBox.getSelectedIndex() != -1) {
-                    avanzarButton.setEnabled(true);
-                } else {
-                    avanzarButton.setEnabled(false);
-                }
-            }
-        });
-    
-        minutosComboBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (horaComboBox.getSelectedIndex() != -1 && minutosComboBox.getSelectedIndex() != -1) {
-                    avanzarButton.setEnabled(true);
-                } else {
-                    avanzarButton.setEnabled(false);
-                }
-            }
-        });
-    
-        horaPanel.add(horaComboBox);
-        horaPanel.add(new JLabel(":"));
-        horaPanel.add(minutosComboBox);
+        horaPanel1.add(horaComboBox1);
+        horaPanel1.add(new JLabel(":"));
+        horaPanel1.add(minutosComboBox1);
+        horaPanel2.add(horaComboBox2);
+        horaPanel2.add(new JLabel(":"));
+        horaPanel2.add(minutosComboBox2);
     
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
         panel.add(label);
-        panel.add(horaPanel);
+        panel.add(labela);
+        panel.add(label1);
+        panel.add(horaPanel1);
+        panel.add(label2);
+        panel.add(horaPanel2);
         panel.add(avanzarButton);
     
         avanzarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int hora = (int) horaComboBox.getSelectedItem();
-                String minutos = (String) minutosComboBox.getSelectedItem();
-                System.out.println("Nueva " + nombreCampo + ": " + String.format("%02d", hora) + ":" + minutos);
+                String hora1 = horaComboBox1.getSelectedItem().toString();
+                String minutos1 =minutosComboBox1.getSelectedItem().toString();
+                String hora2 = horaComboBox2.getSelectedItem().toString();
+                String minutos2 = minutosComboBox2.getSelectedItem().toString();
+                String inicio=(hora1+minutos1);
+                String fin=(hora2+minutos2);
+                System.out.println("inicio:"+inicio);
+                System.out.println("fin:"+fin);
+                if(Integer.parseInt(fin)> Integer.parseInt(inicio)){
                 avanzarAlSiguientePaso(siguientePasoKey);
+                }
+                else{
+                    VentanaAdmin.errorDialog("Verifique que la fecha/periodo inicial sea previa a la fecha/periodo final.");
+                }  
             }
         });
     
@@ -254,7 +287,7 @@ public class EditorObjetos {
             frame.add(mainPanel);
 
             EditorObjetos editor = new EditorObjetos();
-            editor.editorSeguro(mainPanel);
+            editor.editorSede(mainPanel);
             editor.editar();
 
             frame.setVisible(true);

@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
+import javax.swing.colorchooser.ColorChooserComponentFactory;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -16,6 +17,7 @@ import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.font.TextAttribute;
+import java.net.SocketTimeoutException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,11 +29,18 @@ public class VentanaAdmin {
     JTabbedPane panelInferior;
     static boolean inAction;
     static boolean boolModificar;
+    static JComboBox<String> comboBoxGeneral1Vehi;
+    static JComboBox<String> comboBoxGeneral2Vehi;
+    static JComboBox<String> comboBoxGeneral3Vehi;
     static JComboBox<String> comboBoxGeneral1Sede;
     static JComboBox<String> comboBoxGeneral2Sede;
     static JComboBox<String> comboBoxGeneral3Sede;
     static JComboBox<String> comboBoxGeneral4Sede;
     static JComboBox<String> comboBoxGeneral5Sede;
+    static JComboBox<String> comboBoxGeneral6Sede;
+    static JComboBox<String> comboBoxGeneral7Sede;
+    static JComboBox<String> comboBoxGeneral8Sede;
+    static JComboBox<String> comboBoxGeneral9Sede;
     static JComboBox<String> comboBoxGeneral1Cate;
     static JComboBox<String> comboBoxGeneral2Cate;
     static JComboBox<String> comboBoxGeneral3Cate;
@@ -109,6 +118,35 @@ public class VentanaAdmin {
         panelInferior.add("Personal",panel5);
         panelInferior.add("Tarifas/periodos",panel6);
         panelInferior.setSelectedIndex(-1);
+        panelInferior.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                // Obtener el índice de la pestaña seleccionada
+                int selectedIndex = panelInferior.getSelectedIndex();
+                if (selectedIndex==1){
+                    refresh(panel1);
+                    panel1.add(menuVehiculos());
+                }
+                else if (selectedIndex==2){
+                    refresh(panel2);
+                    panel2.add(menuCategorias());
+                }
+                else if (selectedIndex==3){
+                    refresh(panel3);
+                    panel3.add(menuSedes());
+                }
+                else if (selectedIndex==4){
+                    refresh(panel4);
+                    panel4.add(menuSeguros());
+                }
+                else if (selectedIndex==5){
+                    refresh(panel5);
+                    panel5.add(menuPersonal());
+                }
+                else{
+                    refresh(panel6);
+                    panel6.add(menuTarifasPeriodos());
+                }
+        }});
         return panelInferior;
     }
 
@@ -150,11 +188,7 @@ public class VentanaAdmin {
         menu.add("Registrar categoría", panel1);
         menu.addChangeListener(new ChangeListener() {
         public void stateChanged(ChangeEvent e) {
-            // Obtener el índice de la pestaña seleccionada
-            int selectedIndex = menu.getSelectedIndex();
-            if (selectedIndex==1){
-                nuevoPanel1Categorias(panel1);
-                }
+                nuevoPanel1Categorias(panel1);    
         }});
         menu.setSelectedIndex(-1);
         return menu;
@@ -295,6 +329,9 @@ public class VentanaAdmin {
         JRadioButton automatica= new JRadioButton("Automática");
         opcionTransmision.add(manual);
         opcionTransmision.add(automatica);
+        manual.setActionCommand("MANUAL");
+        automatica.setActionCommand("AUTOMATICA");
+
         panel1.add(manual);
         panel1.add(automatica);
         panel1.add(new JLabel("Categoria:"));
@@ -302,18 +339,48 @@ public class VentanaAdmin {
         String[] opcionesCategorias= {"Categoria1","Categoria2"};
         categorias= new JComboBox<>(opcionesCategorias);
         categorias.setPreferredSize(new Dimension(100, 20)); 
-        categorias.setSelectedItem(-1);
+        categorias.setSelectedItem(0);
         panel1.add(categorias);
         panel1.add(new JLabel("Sedes:"));
         //TODO con un for añadir sedes
         String[] opcionesSedes= {"Sede1","Sede2"};
         sedes= new JComboBox<String>(opcionesSedes);
-
         sedes.setPreferredSize(new Dimension(20, 20)); 
-        sedes.setSelectedItem(-1);
+        sedes.setSelectedItem(0);
         panel1.add(sedes);
+
+        comboBoxGeneral1Vehi=categorias;
+        comboBoxGeneral2Vehi=sedes;
         JButton avanzar1= new JButton("Registrar vehículo");
         panel1.add(avanzar1);
+        avanzar1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                String placaStr= placa.getText().toString();
+                String marcaStr= marca.getText().toString();
+                String modeloStr= modelo.getText().toString();
+                String colorStr= color.getText().toString();
+                ButtonModel selectedTransmision = opcionTransmision.getSelection();
+                String categoriaStr= comboBoxGeneral1Vehi.getSelectedItem().toString();
+                String sedeStr= comboBoxGeneral2Vehi.getSelectedItem().toString();
+                if (!placaStr.equals("")&&!marcaStr.equals("")&&!modeloStr.equals("")&&!colorStr.equals("")&& selectedTransmision!=null){
+                String transmisionStr = selectedTransmision.getActionCommand(); // Obtener el texto de la opción seleccionada
+                System.out.println(placaStr);
+                System.out.println(marcaStr);
+                System.out.println(modeloStr);
+                System.out.println(colorStr);
+                System.out.println(transmisionStr);
+                System.out.println(categoriaStr);
+                System.out.println(sedeStr);
+                CambioGuardadoDialog();
+                refresh(panel1);
+                }
+                else{
+                    errorDialog("Complete todos los campos requeridos.");
+                }
+
+            }
+        });
     }
         private static void nuevoPanel2Vehiculo(JPanel panel2){
         refresh(panel2);
@@ -331,63 +398,158 @@ public class VentanaAdmin {
         panel2a.add(placa);
         panel2a.add(new JLabel("\n"));
         JButton avanzar2a= new JButton("Buscar");
+        avanzar2a.setVisible(false);
         panel2a.add(avanzar2a);
+
+        DocumentListener documentListener = new DocumentListener() {
+            @Override
+                public void insertUpdate(DocumentEvent e) {
+                    avanzar2a.setVisible(!placa.getText().trim().isEmpty());
+                }
+                @Override
+                public void removeUpdate(DocumentEvent e) {
+                    avanzar2a.setVisible(!placa.getText().trim().isEmpty());
+                }
+                @Override
+                public void changedUpdate(DocumentEvent e) {
+                    avanzar2a.setVisible(!placa.getText().trim().isEmpty());
+                }
+            };
+        placa.getDocument().addDocumentListener(documentListener);
+
+
+
         panel2.add(panel2a);
-            //Resumen Carro
         JPanel panel2b= new JPanel();
-        panel2b.setPreferredSize(new Dimension(0, 120));
+        panel2b.add(Box.createRigidArea(new Dimension(0,320)));
         panel2.add(panel2b);
-            //Menu interno
-        JTabbedPane menuInterno = new JTabbedPane();
-        menuInterno.setPreferredSize(new Dimension(0, 200));
-        menuInterno.add("Dar de baja", new JPanel());
-        menuInterno.add("Obtener archivo log", new JPanel());
-        JPanel panel2c= new JPanel();
-        panel2c.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 0)); // Establece un FlowLayout sin relleno
-        panel2c.add(new JLabel("Elija la sede a la que se trasladará el vehículo"));
-        //TODO lista sedes
-        JComboBox sedes2 = new JComboBox<>();
-        sedes2.add(new JButton("Opcion 1"));
-        sedes2.setSelectedIndex(-1);
-        panel2c.add(sedes2);
-        sedes2.setPreferredSize(new Dimension(200, 30));
-        panel2c.add( Box.createRigidArea(new Dimension(0,100)));
-        //TODO logica
-        JButton avanzar= new JButton("Trasladar");
-        panel2c.add(avanzar);
-        menuInterno.add("Trasladar", panel2c);
-        panel2.add(menuInterno);
-    }
+        //TODO
+
+        avanzar2a.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                if (!placa.getText().toString().equals("")){
+                    nuevoPanel2AuxVehiculo(panel2,panel2b);
+                    avanzar2a.setVisible(false);
+                }
+            }});
+        }
+        private static void nuevoPanel2AuxVehiculo(JPanel panel2, JPanel panel2b){
+            panel2.revalidate();
+            panel2.repaint();
+                //Resumen Carro
+            panel2b.removeAll();
+            panel2b.setPreferredSize(new Dimension(0, 120));
+                //Menu interno
+            JTabbedPane menuInterno = new JTabbedPane();
+            menuInterno.setPreferredSize(new Dimension(0, 200));
+                //Panel dar de baja
+            JPanel panelBaja= new JPanel();
+            JButton darBajaButton= new JButton("Dar de baja");
+            panelBaja.add(darBajaButton);
+            menuInterno.add("Dar de baja", panelBaja);
+            darBajaButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    //TODO logica eliminar carro
+                    VentanaAdmin.CambioGuardadoDialog();
+                    refresh(panel2);
+                }
+            });
+                //Panel archivo log
+            JPanel panelLog= new JPanel();
+            JButton logButton= new JButton("Obtener archivo");
+            panelLog.add(logButton);
+            menuInterno.add("Obtener archivo log", panelLog);
+            logButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e){
+                    //TODO logica archivo log
+                    VentanaAdmin.logDialog();
+                    refresh(panel2);
+                }
+            });
+
+                //Traslado
+            JPanel panel2c= new JPanel();
+            panel2c.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 0)); // Establece un FlowLayout sin relleno
+            panel2c.add(new JLabel("Elija la sede a la que se trasladará el vehículo"));
+            //TODO lista sedes
+            JComboBox sedes2 = new JComboBox<>();
+            String[] opcionesSedes= {"Sede1","Sede2"};
+            sedes2= new JComboBox<>(opcionesSedes);
+            sedes2.setSelectedIndex(0);
+            panel2c.add(sedes2);
+            sedes2.setPreferredSize(new Dimension(200, 30));
+            panel2c.add( Box.createRigidArea(new Dimension(0,100)));
+            JButton trasladorButton= new JButton("Trasladar");
+            panel2c.add(trasladorButton);
+            comboBoxGeneral3Vehi= sedes2;
+            trasladorButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e){
+                //TODO logica
+                System.out.println(comboBoxGeneral3Vehi.getSelectedItem().toString().trim());
+                VentanaAdmin.CambioGuardadoDialog();
+                refresh(panel2);
+                }
+            });
+
+            menuInterno.add("Trasladar", panel2c);
+            panel2.add(menuInterno);
+            panel2.revalidate();
+            panel2.repaint();
+
+        }
+        
+    
         private static void nuevoPanel3Vehiculo(JPanel panel3){
         refresh(panel3);
         panel3.setLayout(new BoxLayout(panel3, BoxLayout.Y_AXIS));
         panel3.setLayout(new FlowLayout(FlowLayout.CENTER, 30, 0)); // Establece un FlowLayout sin relleno
         panel3.add(new JLabel("Elija la sede de la que desea visualizar la gráfica de alto nivel"));
         //TODO lista sedes
-        JComboBox sedes3 = new JComboBox<>();
-        sedes3.add(new JButton("Opcion 1"));
-        sedes3.setSelectedIndex(-1);
+        String[] opcionesSedes= {"Sede1","Sede2"};
+        JComboBox sedes3 = new JComboBox<>(opcionesSedes);
+        sedes3.setSelectedIndex(0);
         sedes3.setPreferredSize(new Dimension(200, 30));
         panel3.add(sedes3);
-        JButton avanzar2= new JButton("Continuar");
-        panel3.add(avanzar2);
-        //TODO -> panel 3a va a tener la grafica
-        JPanel panel3a= new JPanel();
-        panel3.add(panel3a);
+        JButton avanzarButton= new JButton("Continuar");
+        panel3.add(avanzarButton);
+        avanzarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                System.out.println(sedes3.getSelectedItem().toString());
+                refresh(panel3);
+                JPanel panel4= new JPanel(new GridLayout(0, 1));
+                
+                //TODO -> panel 4a va a tener la grafica para la sede dada
+                MonthlyCalendarPanel vista= new MonthlyCalendarPanel("Sede");
+                vista.setMonthlyCalendarPanel();
+
+                refresh(panel3);
+                panel3.validate();
+                panel3.repaint();
+
+            }
+        });
+
     }
 
         private static void nuevoPanel1Categorias(JPanel panel1){
         refresh(panel1);
         //
         PlaceHolderTextField tipoVehiculo= new PlaceHolderTextField("Ej: PickUp");
-        JComboBox<Integer> capacidad = new JComboBox<>();
-        JComboBox<Double> temp1 = new JComboBox<>();
-        JComboBox<Double> temp2 = new JComboBox<>();
+        JComboBox<String> nivelesLujo = new JComboBox<>();
+        JComboBox<String> capacidad = new JComboBox<>();
+        JComboBox<String> temp1 = new JComboBox<>();
+        JComboBox<String> temp2 = new JComboBox<>();
         NumericOnlyTextField costoLeve= new NumericOnlyTextField();
         NumericOnlyTextField costoModerado= new NumericOnlyTextField();
         NumericOnlyTextField costoGrave= new NumericOnlyTextField();
         NumericOnlyTextField tarifa= new NumericOnlyTextField();
-        JComboBox categorias= new JComboBox<>();
+        JComboBox<String> categorias= new JComboBox<>();
+        //
         //
         panel1.setPreferredSize(new Dimension(0, 400));
         panel1.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0)); // Establece un FlowLayout sin relleno
@@ -400,28 +562,32 @@ public class VentanaAdmin {
         panel1.add(tipoVehiculo);
         panel1.add(new JLabel("Nivel de lujo del vehículo:"));
         String[] opcionesLujo = {"Premium", "Intermedio", "Económico"};
-        JComboBox<String> nivelesLujo = new JComboBox<>(opcionesLujo);
+        nivelesLujo= new JComboBox<>(opcionesLujo);
+        nivelesLujo.setSelectedIndex(0);
         panel1.add(nivelesLujo);
         panel1.add(new JLabel("Capacidad:"));
-        DefaultComboBoxModel<Integer> opcionesCapacidad = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<String> opcionesCapacidad = new DefaultComboBoxModel<>();
         for (int i = 1; i <= 20; i++) {
-            opcionesCapacidad.addElement(i);
+            opcionesCapacidad.addElement(Integer.toString(i));
         }
         capacidad = new JComboBox<>(opcionesCapacidad);
+        capacidad.setSelectedIndex(0);
         panel1.add(capacidad);
         panel1.add(new JLabel("% a pagar por Temporada Alta:"));
-        DefaultComboBoxModel<Double> opcionesTemp1 = new DefaultComboBoxModel<>();
-        DefaultComboBoxModel<Double> opcionesTemp2 = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<String> opcionesTemp1 = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<String> opcionesTemp2 = new DefaultComboBoxModel<>();
         for (double i = 0.1; i <= 2.1; i += 0.1) {
             double numeroRedondeado = (double) Math.round(i * Math.pow(10, 1)) / Math.pow(10, 1);
-            opcionesTemp1.addElement(numeroRedondeado);
-            opcionesTemp2.addElement(numeroRedondeado);
+            opcionesTemp1.addElement(Double.toString(numeroRedondeado));
+            opcionesTemp2.addElement(Double.toString(numeroRedondeado));
 
         }
         temp1 = new JComboBox<>(opcionesTemp1);
+        temp1.setSelectedIndex(0);
         panel1.add(temp1);
         panel1.add(new JLabel("% a pagar por Temporada Baja:"));
         temp2 = new JComboBox<>(opcionesTemp2);
+        temp2.setSelectedIndex(0);
         panel1.add(temp2);
         panel1.add(new JLabel("Costo por avería leve (COP):"));
         panel1.add(costoLeve);
@@ -431,12 +597,50 @@ public class VentanaAdmin {
         panel1.add(costoGrave);
         panel1.add(new JLabel("Tarifa diaria:"));
         panel1.add(tarifa);
-        panel1.add(new JLabel("Categoria superior:"));
+        panel1.add(new JLabel("Categoria superior/padre:"));
         //TODO
         categorias.setPreferredSize(new Dimension(100, 20)); 
-        categorias.setSelectedItem(-1);
+        categorias.addItem("Categoria1");
+        categorias.addItem("Categoria2");
+        categorias.setSelectedIndex(0);
         panel1.add(categorias);
+        comboBoxGeneral1Cate=nivelesLujo;
+        comboBoxGeneral2Cate= capacidad;
+        comboBoxGeneral3Cate=temp1;
+        comboBoxGeneral4Cate=temp2;
+        comboBoxGeneral5Cate=categorias;
         JButton avanzar= new JButton("Registrar Categoría");
+        avanzar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                String tipoStr= tipoVehiculo.getText().toString();
+                String lujoStr= comboBoxGeneral1Cate.getSelectedItem().toString().toUpperCase();
+                String capacidadStr= comboBoxGeneral2Cate.getSelectedItem().toString();
+                String temp1Str= comboBoxGeneral3Cate.getSelectedItem().toString();
+                String temp2Str= comboBoxGeneral4Cate.getSelectedItem().toString();
+                String costoLeveStr= costoLeve.getText().toString();
+                String costoModeradoStr= costoModerado.getText().toString();
+                String costoGraveStr= costoGrave.getText().toString();
+                String tarifaStr= tarifa.getText().toString();
+                String categoriaStr= comboBoxGeneral5Cate.getSelectedItem().toString();
+                if (!tipoStr.equals("")&&!costoLeveStr.equals("")&&!costoModeradoStr.equals("")&&!costoGraveStr.equals("")&&!tarifaStr.equals("")){
+                    System.out.println(tipoStr+"_"+lujoStr);
+                    System.out.println(capacidadStr);
+                    System.out.println(temp1Str);
+                    System.out.println(temp2Str);
+                    System.out.println(costoLeveStr);
+                    System.out.println(costoModeradoStr);
+                    System.out.println(costoGraveStr);
+                    System.out.println(tarifaStr);
+                    System.out.println(categoriaStr);
+                    VentanaAdmin.CambioGuardadoDialog();
+                    refresh(panel1);
+                }
+                else{
+                    VentanaAdmin.errorDialog("Verifique que todos los campos de texto estén llenos.");
+                }
+          }
+        });
         panel1.add(avanzar);
     }
         private static void nuevoPanel1Sedes(JPanel panel1){
@@ -446,10 +650,16 @@ public class VentanaAdmin {
         PlaceHolderTextField ubiSede= new PlaceHolderTextField("Ej: Cl. 57c Sur #87-21");
         DefaultComboBoxModel<String> opcionesHora1 = new DefaultComboBoxModel<>();
         DefaultComboBoxModel<String> opcionesHora2 = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<String> opcionesHora3 = new DefaultComboBoxModel<>();
+        DefaultComboBoxModel<String> opcionesHora4 = new DefaultComboBoxModel<>();
         JComboBox<String> hora1 = new JComboBox<>();
         JComboBox<String> min1 = new JComboBox<>();
         JComboBox<String> hora2 = new JComboBox<>();
         JComboBox<String> min2 = new JComboBox<>();
+        JComboBox<String> hora3 = new JComboBox<>();
+        JComboBox<String> min3 = new JComboBox<>();
+        JComboBox<String> hora4 = new JComboBox<>();
+        JComboBox<String> min4 = new JComboBox<>();
         //
         GridLayout gridLayout1 = new GridLayout(0, 3);
         gridLayout1.setVgap(10);
@@ -472,10 +682,14 @@ public class VentanaAdmin {
             s=s+Integer.toString(i);
             opcionesHora1.addElement(s);
             opcionesHora2.addElement(s);
+            opcionesHora3.addElement(s);
+            opcionesHora4.addElement(s);
 
         }
         String[] opcionesMinutos1 = {"00"};
         String[] opcionesMinutos2 = {"00"};
+        String[] opcionesMinutos3 = {"00"};
+        String[] opcionesMinutos4 = {"00"};
 
         hora1 = new JComboBox<>(opcionesHora1);
         min1 = new JComboBox<>(opcionesMinutos1);
@@ -483,13 +697,27 @@ public class VentanaAdmin {
         min1.setSelectedIndex(0);
         panel1.add(hora1);
         panel1.add(min1);
-        panel1.add(new JLabel("Horario de apertura para fin de semana (hh mm):"));        
+        panel1.add(new JLabel("Horario de cierre entre semana (hh mm):"));        
         hora2 = new JComboBox<>(opcionesHora2);
         min2 = new JComboBox<>(opcionesMinutos2);
         hora2.setSelectedIndex(0);
         min2.setSelectedIndex(0);
         panel1.add(hora2);
         panel1.add(min2);
+        panel1.add(new JLabel("Horario de apertura para fin de semana (hh mm):"));        
+        hora3 = new JComboBox<>(opcionesHora3);
+        min3 = new JComboBox<>(opcionesMinutos3);
+        hora3.setSelectedIndex(0);
+        min3.setSelectedIndex(0);
+        panel1.add(hora3);
+        panel1.add(min3);
+        panel1.add(new JLabel("Horario de cierre para fin de semana (hh mm):"));        
+        hora4 = new JComboBox<>(opcionesHora4);
+        min4 = new JComboBox<>(opcionesMinutos4);
+        hora4.setSelectedIndex(0);
+        min4.setSelectedIndex(0);
+        panel1.add(hora4);
+        panel1.add(min4);
         
         JButton imag= new JButton();
         imag.setBackground(Color.WHITE);
@@ -507,6 +735,10 @@ public class VentanaAdmin {
         comboBoxGeneral2Sede=min1;
         comboBoxGeneral3Sede=hora2;
         comboBoxGeneral4Sede=min2;
+        comboBoxGeneral5Sede=hora3;
+        comboBoxGeneral6Sede=min3;
+        comboBoxGeneral7Sede=hora4;
+        comboBoxGeneral8Sede=min4;
         DocumentListener documentListener = new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -531,14 +763,38 @@ public class VentanaAdmin {
         avanzar.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                System.out.println(nomSede.getText());
-                System.out.println(ubiSede.getText());
-                System.out.println(comboBoxGeneral1Sede.getSelectedItem());
-                System.out.println(comboBoxGeneral2Sede.getSelectedItem());
-                System.out.println(comboBoxGeneral3Sede.getSelectedItem());
-                System.out.println(comboBoxGeneral4Sede.getSelectedItem());
-                refresh(panel1);
-                CambioGuardadoDialog();
+                    String hora1 = comboBoxGeneral1Sede.getSelectedItem().toString();
+                    String minutos1 =comboBoxGeneral2Sede.getSelectedItem().toString();
+                    String hora2 = comboBoxGeneral3Sede.getSelectedItem().toString();
+                    String minutos2 = comboBoxGeneral4Sede.getSelectedItem().toString();
+                    String inicio1=(hora1+minutos1);
+                    String fin1=(hora2+minutos2);
+                    String hora3 = comboBoxGeneral5Sede.getSelectedItem().toString();
+                    String minutos3=comboBoxGeneral6Sede.getSelectedItem().toString();
+                    String hora4 = comboBoxGeneral7Sede.getSelectedItem().toString();
+                    String minutos4 = comboBoxGeneral8Sede.getSelectedItem().toString();
+                    String inicio2=(hora3+minutos3);
+                    String fin2=(hora4+minutos4);
+
+                    if(Integer.parseInt(fin1)> Integer.parseInt(inicio1)&&Integer.parseInt(fin2)> Integer.parseInt(inicio2)){
+                        if (!nomSede.getText().trim().equals("")&&!ubiSede.getText().trim().equals("")){
+                            System.out.println("nom:"+nomSede.getText());
+                            System.out.println("ubi:"+ubiSede.getText());
+                            System.out.println("inicio1:"+inicio1);
+                            System.out.println("fin1:"+fin1);
+                            System.out.println("inicio2:"+inicio2);
+                            System.out.println("fin2:"+fin2);
+                            refresh(panel1);
+                            CambioGuardadoDialog();
+                        }
+                        else{
+                        VentanaAdmin.errorDialog("Verifique que no haya campos de texto vacios.");
+                        }
+                    }
+                    else{
+                        VentanaAdmin.errorDialog("Verifique que la fecha/periodo inicial sea previa a la fecha/periodo final.");
+                    }  
+
             }
         });
 
@@ -729,11 +985,11 @@ public class VentanaAdmin {
             JButton avanzar = new JButton("Eliminar Seguro");
             avanzar.setVisible(false);
             panel3.add(avanzar);
-            comboBoxGeneral5Sede= seguros;
+            comboBoxGeneral9Sede= seguros;
             seguros.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    boolean showButton = !comboBoxGeneral5Sede.getSelectedItem().equals(null);
+                    boolean showButton = !comboBoxGeneral9Sede.getSelectedItem().equals(null);
                     avanzar.setVisible(showButton);
                 }
             });
@@ -775,10 +1031,21 @@ public class VentanaAdmin {
             panel1.add(Box.createRigidArea(new Dimension(0,200)));
             panel1.add(avanzar);
             avanzar.setVisible(false);
-            login.addActionListener(new ActionListener(){
-                public void actionPerformed(ActionEvent e) {
-                    avanzar.setVisible(!login.getText().trim().isEmpty());
-                }});
+            DocumentListener documentListener1 = new DocumentListener() {
+                @Override
+                    public void insertUpdate(DocumentEvent e) {
+                        avanzar.setVisible(!login.getText().trim().isEmpty());
+                    }
+                    @Override
+                    public void removeUpdate(DocumentEvent e) {
+                        avanzar.setVisible(!login.getText().trim().isEmpty());
+                    }
+                    @Override
+                    public void changedUpdate(DocumentEvent e) {
+                        avanzar.setVisible(!login.getText().trim().isEmpty());
+                    }
+                };
+            login.getDocument().addDocumentListener(documentListener1);
             avanzar.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e){
                     //TODO verificar login
@@ -799,10 +1066,20 @@ public class VentanaAdmin {
                         JButton avanzar2 = new JButton("Agregar administrador local");
                         panel1.add(avanzar2);
                         avanzar2.setVisible(false);
-                        password.addActionListener(new ActionListener(){
-                            public void actionPerformed(ActionEvent e) {
-                                avanzar2.setVisible(!password.getText().trim().isEmpty());
-                                }});          
+                        DocumentListener documentListener2 = new DocumentListener() {
+                            @Override
+                        public void insertUpdate(DocumentEvent e) {
+                            avanzar2.setVisible(!password.getText().trim().isEmpty());
+                        }
+                        @Override
+                        public void removeUpdate(DocumentEvent e) {
+                            avanzar2.setVisible(!password.getText().trim().isEmpty());
+                        }
+                        @Override
+                        public void changedUpdate(DocumentEvent e) {
+                            avanzar2.setVisible(!password.getText().trim().isEmpty());
+                        }};
+                        password.getDocument().addDocumentListener(documentListener2);                  
                         avanzar2.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
                                 // TODO: Realizar acciones al presionar "avanzar2"
@@ -837,10 +1114,21 @@ public class VentanaAdmin {
             panel2.add(Box.createRigidArea(new Dimension(0,200)));
             panel2.add(avanzar);
             avanzar.setVisible(false);
-            login.addActionListener(new ActionListener(){
-                public void actionPerformed(ActionEvent e) {
-                    avanzar.setVisible(!login.getText().trim().isEmpty());
-                }});
+            DocumentListener documentListener = new DocumentListener() {
+                @Override
+                    public void insertUpdate(DocumentEvent e) {
+                        avanzar.setVisible(!login.getText().trim().isEmpty());
+                    }
+                    @Override
+                    public void removeUpdate(DocumentEvent e) {
+                        avanzar.setVisible(!login.getText().trim().isEmpty());
+                    }
+                    @Override
+                    public void changedUpdate(DocumentEvent e) {
+                        avanzar.setVisible(!login.getText().trim().isEmpty());
+                    }
+                };
+            login.getDocument().addDocumentListener(documentListener);
             avanzar.addActionListener(new ActionListener(){
                 public void actionPerformed(ActionEvent e){
                     //TODO verificar si es admin
@@ -863,10 +1151,20 @@ public class VentanaAdmin {
                         JButton avanzar2 = new JButton("Actualizar administrador local");
                         panel2.add(avanzar2);
                         avanzar2.setVisible(false);
-                        password.addActionListener(new ActionListener(){
-                            public void actionPerformed(ActionEvent e) {
-                                avanzar2.setVisible(!password.getText().trim().isEmpty());
-                                }});          
+                        DocumentListener documentListener2 = new DocumentListener() {
+                            @Override
+                        public void insertUpdate(DocumentEvent e) {
+                            avanzar2.setVisible(!password.getText().trim().isEmpty());
+                        }
+                        @Override
+                        public void removeUpdate(DocumentEvent e) {
+                            avanzar2.setVisible(!password.getText().trim().isEmpty());
+                        }
+                        @Override
+                        public void changedUpdate(DocumentEvent e) {
+                            avanzar2.setVisible(!password.getText().trim().isEmpty());
+                        }};
+                        password.getDocument().addDocumentListener(documentListener2);         
                         avanzar2.addActionListener(new ActionListener() {
                             public void actionPerformed(ActionEvent e) {
                                 // TODO: Realizar acciones al presionar "avanzar2"
@@ -884,8 +1182,8 @@ public class VentanaAdmin {
                 //
                 NumericOnlyTextField precio = new NumericOnlyTextField();
                 //
-                panel.setLayout(new GridLayout(0, 2));
-                panel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 80));
+                panel.setLayout(new GridLayout(0, 1));
+                //panel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 80));
                 JLabel label = new JLabel("Nuevo Precio (COP) ");
                 precio.setSize(new Dimension(100,50));
                 JButton actualizarPrecio = new JButton("Actualizar precio");  
@@ -894,23 +1192,32 @@ public class VentanaAdmin {
                 panel.add(label);
                 panel.add(precio);
                 panel.add(Box.createRigidArea(new Dimension(0, 100)));
-                panel.add(Box.createRigidArea(new Dimension(0, 100)));
                 panel.add(actualizarPrecio);
                     
                 actualizarPrecio.setVisible(false);
-                
-                precio.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    actualizarPrecio.setVisible(!precio.getText().trim().isEmpty());
-                }
-                });
-                
-            actualizarPrecio.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Precio actualizado: " + precio.getText());
-                    CambioGuardadoDialog();
-                    refresh(panel);
-                }
+
+                DocumentListener documentListener = new DocumentListener() {
+                    @Override
+                        public void insertUpdate(DocumentEvent e) {
+                            actualizarPrecio.setVisible(!precio.getText().trim().isEmpty());
+                        }
+                        @Override
+                        public void removeUpdate(DocumentEvent e) {
+                            actualizarPrecio.setVisible(!precio.getText().trim().isEmpty());
+                        }
+                        @Override
+                        public void changedUpdate(DocumentEvent e) {
+                            actualizarPrecio.setVisible(!precio.getText().trim().isEmpty());
+                        }
+                    };
+                    precio.getDocument().addDocumentListener(documentListener);
+
+                actualizarPrecio.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        System.out.println("Precio actualizado: " + precio.getText());
+                        CambioGuardadoDialog();
+                        refresh(panel);
+                    }
             });
          }
                     
@@ -921,50 +1228,158 @@ public class VentanaAdmin {
                 //
                 panel.setLayout(new GridLayout(0, 1));
                 panel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 80));
-                JLabel label = new JLabel("Nuevo Periodo ");
+                JLabel label = new JLabel("Inicio Periodo ");
                 panel.add(label);
-
-                DateComboBoxPanel date= new DateComboBoxPanel(Calendar.getInstance().get(Calendar.YEAR+1));
-                panel.add(date);
+                DateComboBoxPanel date1= new DateComboBoxPanel(Calendar.getInstance().get(Calendar.YEAR+1));
+                date1.setDefaulDayComboBox();
+                date1.setDefaultMonthComboBox();
+                panel.add(date1);
+                JLabel label2 = new JLabel("Fin Periodo ");
+                panel.add(label2);
+                DateComboBoxPanel date2= new DateComboBoxPanel(Calendar.getInstance().get(Calendar.YEAR+1));
+                date2.setDefaulDayComboBox();
+                date2.setDefaultMonthComboBox();
+                panel.add(date2);
                 panel.add(Box.createRigidArea(new Dimension(0, 100)));
                 panel.add(Box.createRigidArea(new Dimension(0, 100)));
                 JButton actualizar = new JButton("Actualizar periodo");  
                 actualizar.setSize(new Dimension(100,50));
                 panel.add(actualizar);
-            
+
 
                 actualizar.addActionListener(new ActionListener() {  
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    String text = date.getText();
-                    System.out.println(text);
+                    String text1 = date1.getText();
+                    String text2 = date2.getText();
+                    System.out.println(text1);
+                    System.out.println(text2);
                     // TODO: Realizar acciones al presionar "avanzar"
-                    CambioGuardadoDialog();
-                    refresh(panel);
+                    if (Integer.parseInt(text2)>Integer.parseInt(text1)){
+                        if(!text1.equals("")&& !text2.equals("")){
+                            CambioGuardadoDialog();
+                            refresh(panel);
+                        }
+                        else{
+                        VentanaAdmin.errorDialog("Verifique que ningún campo este vacío.");
+                        }
+
+                    }
+                    else{
+                        VentanaAdmin.errorDialog("Verifique que la fecha/periodo inicial sea previa a la fecha/periodo final.");
+                    }
                 }
                 });
 
             
         }
+
         public static void CambioGuardadoDialog() {
-            JDialog dialog= new JDialog();
-            GridLayout gridLayout1 = new GridLayout(1, 0);
-            dialog.setLayout(gridLayout1);
-            dialog.setTitle("Notificacion");
-            dialog.setModalityType(ModalityType.APPLICATION_MODAL); // Bloquea otras ventanas mientras está abierta
-            dialog.setSize(300, 200);
-            dialog.setLocationRelativeTo(null); // Centra el diálogo en la pantalla
-            JLabel label=new JLabel("    Cambio/s guardado/s"); 
-            dialog.add(label);
-            JButton okButton = new JButton("OK");
-            okButton.setBounds(100, 25, 70, 30); // Establece la posición y tamaño del botón
-            okButton.addActionListener(e -> {
-                dialog.dispose(); // Cierra el diálogo al hacer clic en el botón "OK"
-            });
+            JDialog dialog = new JDialog();
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setTitle("Notificación");
+            dialog.setModalityType(ModalityType.APPLICATION_MODAL);
+            dialog.setSize(300, 150);
+            dialog.setLocationRelativeTo(null);
+            dialog.setLayout(new BorderLayout());
     
-            dialog.add(okButton);
+            JPanel contentPanel = new JPanel();
+            contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+            contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+            JLabel label = new JLabel("Cambio(s) guardado(s)");
+            label.setAlignmentX(Component.CENTER_ALIGNMENT);
+            label.setFont(new Font("Arial", Font.BOLD, 12));
+            contentPanel.add(label);
+    
+            JButton okButton = new JButton("OK");
+            okButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+            okButton.addActionListener(e -> {
+                dialog.dispose();
+            });
+            contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+            contentPanel.add(okButton);
+    
+            dialog.add(contentPanel, BorderLayout.CENTER);
             dialog.setVisible(true);
         }
+        public static void logDialog() {
+            JDialog dialog = new JDialog();
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setTitle("Notificación");
+            dialog.setModalityType(ModalityType.APPLICATION_MODAL);
+            dialog.setSize(300, 150);
+            dialog.setLocationRelativeTo(null);
+            dialog.setLayout(new BorderLayout());
+    
+            JPanel contentPanel = new JPanel();
+            contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+            contentPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    
+            JLabel label = new JLabel("Log guardado en la carpeta \"historiales\"");
+            label.setAlignmentX(Component.CENTER_ALIGNMENT);
+            label.setFont(new Font("Arial", Font.BOLD, 12));
+            contentPanel.add(label);
+    
+            JButton okButton = new JButton("OK");
+            okButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+            okButton.addActionListener(e -> {
+                dialog.dispose();
+            });
+            contentPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+            contentPanel.add(okButton);
+    
+            dialog.add(contentPanel, BorderLayout.CENTER);
+            dialog.setVisible(true);
+        }
+        public static void errorDialog(String labelText2) {
+            JDialog dialog = new JDialog();
+            JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            dialog.setTitle("Notificación");
+            dialog.setModalityType(ModalityType.APPLICATION_MODAL);
+            dialog.setSize(450, 200);
+            dialog.setLocationRelativeTo(null);
+        
+            // Cambia el fondo del panel
+            panel.setBackground(Color.WHITE);
+        
+            // Crea un icono para el diálogo (reemplaza "icon.png" con la ubicación de tu propio archivo de imagen)
+            ImageIcon icon = new ImageIcon("icon.png");
+        
+            // Cambia el icono del diálogo
+            dialog.setIconImage(icon.getImage());
+        
+            JLabel label = new JLabel("No se pudieron guardar los cambios:");
+            JLabel label2 = new JLabel(labelText2);
+        
+            // Cambia el color del texto a negro, establece el estilo negrita y el tamaño de fuente
+            label.setForeground(Color.BLACK);
+            label.setFont(new Font("Arial", Font.BOLD, 12));
+        
+            label2.setForeground(Color.BLACK);
+            label2.setFont(new Font("Arial", Font.PLAIN, 12));
+        
+            // Agrega el JLabel al panel para que se autoajuste al contenido
+            JPanel textPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+            textPanel.add(label2);
+        
+            panel.add(label);
+            panel.add(textPanel);
+        
+            JButton okButton = new JButton("OK");
+            okButton.addActionListener(e -> {
+                dialog.dispose();
+            });
+        
+            panel.add(okButton);
+        
+            dialog.add(panel);
+            dialog.setVisible(true);
+        }
+        
+        
+        
+        
 
         private static boolean checkFields1Sede(PlaceHolderTextField nomSede,PlaceHolderTextField  ubiSede, JComboBox<String> hora1,JComboBox<String> min1,JComboBox<String> hora2,JComboBox<String> min2) {
             // Verificar si todos los campos están llenos
@@ -980,6 +1395,11 @@ public class VentanaAdmin {
                 hora1Selected && min1Selected && hora2Selected && min2Selected);
         }
         public static void refresh(JPanel panel){
+            panel.removeAll();
+            panel.repaint();
+            panel.validate();
+        }
+        public static void refresh(JTabbedPane panel){
             panel.removeAll();
             panel.repaint();
             panel.validate();

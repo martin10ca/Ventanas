@@ -8,7 +8,7 @@ import javax.swing.text.DocumentFilter;
 public class NumericOnlyTextField extends JTextField {
     public NumericOnlyTextField() {
         setToolTipText("Ej: 10000000");
-        setText("\t\t\t\t");    
+        setBounds(0, 0, 80, 30);    
         // Obtiene el Document asociado al JTextField
         AbstractDocument doc = (AbstractDocument) getDocument();
 

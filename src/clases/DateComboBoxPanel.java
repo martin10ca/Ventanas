@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ContainerListener;
 import java.util.Calendar;
 
 public class DateComboBoxPanel extends JPanel {
@@ -24,6 +25,7 @@ public class DateComboBoxPanel extends JPanel {
         dayComboBox = new JComboBox<>();
 
         populateMonthComboBox();
+        monthComboBox.setSelectedItem("01");
         monthComboBox.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -77,14 +79,23 @@ public class DateComboBoxPanel extends JPanel {
         String text2 = dayComboBox.getSelectedItem().toString();
         return text1 + text2;
     }
+    public void setDefaultMonthComboBox(){
+        this.monthComboBox.setSelectedIndex(0);
+    }
+    public void setDefaulDayComboBox(){
+        this.monthComboBox.setSelectedIndex(0);
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Custom ComboBox Panel");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(400, 400);
-
+            //Implementacion
             DateComboBoxPanel customPanel = new DateComboBoxPanel(2023);
+            customPanel.setDefaulDayComboBox();
+            customPanel.setDefaultMonthComboBox();
+            //
             frame.add(customPanel,BorderLayout.NORTH );
             JPanel panelinf= new JPanel();
             
