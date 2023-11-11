@@ -22,6 +22,7 @@ public class VentanaRegistro extends JFrame {
     private JLabel etiquetaDatos;
     private JButton botonContinuar;
     private PlaceHolderTextField campoNombre;
+    
 
     public VentanaRegistro(){
         super("Registro de Usuario");
@@ -152,7 +153,31 @@ public class VentanaRegistro extends JFrame {
         JButton botonTarjeta = new JButton("Añadir Método de Pago");
         botonLicencia.setPreferredSize(new Dimension(50, 30));
         botonTarjeta.setPreferredSize(new Dimension(50, 30));
+        botonLicencia.setEnabled(false);
+        botonTarjeta.setEnabled(false);
         
+        campoContraseña.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                habilitarBotones(campoContraseña.getPassword().length > 0);
+            }
+        
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                habilitarBotones(campoContraseña.getPassword().length > 0);
+            }
+        
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                habilitarBotones(campoContraseña.getPassword().length > 0);
+            }
+
+            private void habilitarBotones(boolean habilitar) {
+                botonLicencia.setEnabled(habilitar);
+                botonTarjeta.setEnabled(habilitar);
+            }
+        });
+
         ActionListener botonListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -182,8 +207,118 @@ public class VentanaRegistro extends JFrame {
         tabbedPane.add("Usuario y Contraseña", panelB);
     
     }
-    public void crearLicencia() {}
-    public void crearTarjeta() {}
+    public void crearLicencia() {
+        JPanel panelC = new JPanel(new GridLayout(0,1));
+        JPanel panelLicencia = new JPanel(new GridLayout(0, 2));
+        JLabel labelMensaje = new JLabel("Ahora, ingrese la información de su Licencia");
+
+        JLabel labelNumeroL = new JLabel("Número de Licencia: ");
+        NumericOnlyTextField campoNumeroL = new NumericOnlyTextField();
+        JLabel labelPais = new JLabel("País de Expedición: ");
+        PlaceHolderTextField campoPais = new PlaceHolderTextField("Ej: Colombia");
+        JLabel labelFechaE = new JLabel("Fecha de Expedición: ");
+        JLabel labelFechaV = new JLabel("Fecha de Vencimiento: ");
+        
+        panelLicencia.add(labelNumeroL);
+        panelLicencia.add(campoNumeroL);
+        panelLicencia.add(labelPais);
+        panelLicencia.add(campoPais);
+        panelLicencia.add(labelFechaE);
+        panelLicencia.add(labelFechaV);
+        
+        JButton botonGuardar = new JButton("Guardar");
+        botonGuardar.setEnabled(false);
+
+        DocumentListener documentListener = new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                habilitarGuardar();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                habilitarGuardar();
+            }
+    
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                habilitarGuardar();
+            }
+    
+            private void habilitarGuardar() {
+                boolean habilitar = !campoNumeroL.getText().isEmpty() &&
+                        !campoPais.getText().isEmpty();
+                botonGuardar.setEnabled(habilitar);
+            }            
+        };
+        campoNumeroL.getDocument().addDocumentListener(documentListener);
+        campoPais.getDocument().addDocumentListener(documentListener);
+
+        panelC.add(labelMensaje);
+        panelC.add(panelLicencia);
+        panelC.add(botonGuardar);
+
+        tabbedPane.add("Licencia de Conducción", panelC);
+    }
+    public void crearTarjeta() {
+        JPanel panelD = new JPanel(new GridLayout(0,1));
+        JPanel panelTarjeta = new JPanel(new GridLayout(0, 2));
+        JLabel labelMensajeU = new JLabel("Por último, ingrese la informacion de su Método de Pago");
+        JLabel labelAdvertencia = new JLabel("Nuestro sistema solamente acepta Tarjetas de Crédito");
+
+        JLabel labelNombreT = new JLabel("Nombre de la persona o entidad Titular: ");
+        PlaceHolderTextField campoNombreT = new PlaceHolderTextField("Ej: Juan López");
+        JLabel labelNumeroT = new JLabel("Número de la Tarjeta: ");
+        NumericOnlyTextField campoNumeroT = new NumericOnlyTextField();
+        JLabel labelMarca = new JLabel("Marca de la Tarjeta: ");
+        PlaceHolderTextField campoMarca = new PlaceHolderTextField("Ej: Visa/Mastercard");
+        JLabel labelFechaV = new JLabel("Fecha de Vencimiento: ");
+        
+        panelTarjeta.add(labelNombreT);
+        panelTarjeta.add(campoNombreT);
+        panelTarjeta.add(labelNumeroT);
+        panelTarjeta.add(campoNumeroT);
+        panelTarjeta.add(labelMarca);
+        panelTarjeta.add(campoMarca);
+        panelTarjeta.add(labelFechaV);
+        
+        JButton botonGuardar = new JButton("Guardar");
+        botonGuardar.setEnabled(false);
+
+        DocumentListener documentListener = new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                habilitarGuardar();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                habilitarGuardar();
+            }
+    
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                habilitarGuardar();
+            }
+    
+            private void habilitarGuardar() {
+                boolean habilitar = !campoNombreT.getText().isEmpty() &&
+                        !campoNumeroT.getText().isEmpty() &&
+                        !campoMarca.getText().isEmpty();
+                botonGuardar.setEnabled(habilitar);
+            }            
+        };
+        campoNombreT.getDocument().addDocumentListener(documentListener);
+        campoNumeroT.getDocument().addDocumentListener(documentListener);
+        campoMarca.getDocument().addDocumentListener(documentListener);
+
+        panelD.add(labelMensajeU);
+        panelD.add(labelAdvertencia);
+        panelD.add(panelTarjeta);
+        panelD.add(botonGuardar);
+
+        tabbedPane.add("Medio de Pago", panelD);
+    }
 
     
     public static void main(String[] args) {
