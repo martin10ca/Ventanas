@@ -91,6 +91,7 @@ public class VentanaRegistro extends JFrame {
                 botonContinuar.setEnabled(habilitar);
             }
         };
+
         campoDocumento.getDocument().addDocumentListener(documentListener);
         campoNombre.getDocument().addDocumentListener(documentListener);
         campoCorreo.getDocument().addDocumentListener(documentListener);
@@ -99,17 +100,15 @@ public class VentanaRegistro extends JFrame {
 
         botonContinuar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                tabbedPane.remove(panelA);
                 crearUsuario();
+                botonContinuar.setEnabled(false);
             }
         });
 
         panelA.add(botonContinuar);
-
         tabbedPane.add("Datos Personales", panelA);
-        
         add(tabbedPane);
-
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setSize(500, 600);
         setVisible(true);
@@ -147,8 +146,8 @@ public class VentanaRegistro extends JFrame {
                 campoContraseña.setVisible(mostrar);
             }            
         };
-        campoUsuario.getDocument().addDocumentListener(documentListener);;
-
+        campoUsuario.getDocument().addDocumentListener(documentListener);
+        campoContraseña.getDocument().addDocumentListener(documentListener);
         JButton botonLicencia = new JButton("Añadir Licencia de Conducción");
         JButton botonTarjeta = new JButton("Añadir Método de Pago");
         botonLicencia.setPreferredSize(new Dimension(50, 30));
@@ -159,28 +158,52 @@ public class VentanaRegistro extends JFrame {
         campoContraseña.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                habilitarBotones(campoContraseña.getPassword().length > 0);
+                habilitarBotones((campoContraseña.getPassword().length > 0)&&!campoUsuario.getText().isEmpty());
             }
-        
             @Override
             public void removeUpdate(DocumentEvent e) {
-                habilitarBotones(campoContraseña.getPassword().length > 0);
+                habilitarBotones((campoContraseña.getPassword().length > 0)&&!campoUsuario.getText().isEmpty());
             }
-        
             @Override
             public void changedUpdate(DocumentEvent e) {
-                habilitarBotones(campoContraseña.getPassword().length > 0);
+                habilitarBotones((campoContraseña.getPassword().length > 0)&&!campoUsuario.getText().isEmpty());
             }
-
             private void habilitarBotones(boolean habilitar) {
+                if (!campoUsuario.getText().isEmpty()){
                 botonLicencia.setEnabled(habilitar);
                 botonTarjeta.setEnabled(habilitar);
             }
+            }
         });
+
+        campoUsuario.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                habilitarBotones((campoContraseña.getPassword().length > 0)&&!campoUsuario.getText().isEmpty());
+            }
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                habilitarBotones((campoContraseña.getPassword().length > 0)&&!campoUsuario.getText().isEmpty());
+            }
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                habilitarBotones((campoContraseña.getPassword().length > 0)&&!campoUsuario.getText().isEmpty());
+            }
+            private void habilitarBotones(boolean habilitar) {
+                if (!campoUsuario.getText().isEmpty()){
+                botonLicencia.setEnabled(habilitar);
+                botonTarjeta.setEnabled(habilitar);
+            }
+            }
+        });
+        
+
 
         ActionListener botonListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                campoUsuario.setEnabled(false);
+                campoContraseña.setEnabled(false);
                 if (e.getSource() == botonLicencia) {
                     crearLicencia();
                     
@@ -259,6 +282,13 @@ public class VentanaRegistro extends JFrame {
         panelC.add(botonGuardar);
 
         tabbedPane.add("Licencia de Conducción", panelC);
+        botonGuardar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                //TODO verificar fechas y guardar, usar booleans
+                tabbedPane.remove(panelC);
+            }
+        });
     }
     public void crearTarjeta() {
         JPanel panelD = new JPanel(new GridLayout(0,1));
@@ -318,6 +348,13 @@ public class VentanaRegistro extends JFrame {
         panelD.add(botonGuardar);
 
         tabbedPane.add("Medio de Pago", panelD);
+        botonGuardar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                //TODO verificar fechas y guardar
+                tabbedPane.remove(panelD);
+            }
+        });
     }
 
     
