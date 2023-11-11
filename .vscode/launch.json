@@ -1,0 +1,56 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "DateComboBoxPanel",
+            "request": "launch",
+            "mainClass": "clases.DateComboBoxPanel",
+            "projectName": "Ventanas"
+        },
+        {
+            "type": "java",
+            "name": "EditorObjetos",
+            "request": "launch",
+            "mainClass": "clases.EditorObjetos",
+            "projectName": "Ventanas"
+        },
+        {
+            "type": "java",
+            "name": "PanelesModificaciones",
+            "request": "launch",
+            "mainClass": "clases.PanelesModificaciones",
+            "projectName": "Ventanas"
+        },
+        {
+            "type": "java",
+            "name": "VentanaAdmin",
+            "request": "launch",
+            "mainClass": "clases.VentanaAdmin",
+            "projectName": "Ventanas"
+        },
+        {
+            "type": "java",
+            "name": "VentanaRegistro",
+            "request": "launch",
+            "mainClass": "clases.VentanaRegistro",
+            "projectName": "Ventanas"
+        },
+        {
+            "type": "java",
+            "name": "crearUsuario",
+            "request": "launch",
+            "mainClass": "clases.crearUsuario",
+            "projectName": "Ventanas"
+        }
+    ]
+}
