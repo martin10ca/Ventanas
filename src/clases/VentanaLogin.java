@@ -53,6 +53,7 @@ public class VentanaLogin {
             }
 
             private void updateButtonState() {
+                System.out.println();
                 String username = nameField.getText();
                 String password = new String(passwordField.getPassword());
                 loginButton.setEnabled(!username.trim().isEmpty() && !password.trim().isEmpty());
